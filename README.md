@@ -99,7 +99,7 @@ personal-expense-tracker/
     cp .env.example .env
 
     # Edit .env with your configuration
-    # MONGODB_URI=mongodb://localhost:27017/expense_tracker
+    # MONGODB_URI=mongodb+srv://admin:admin@mariyaquiz.gd34udu.mongodb.net/expense_tracker?retryWrites=true&w=majority&appName=mariyaquiz
     # JWT_SECRET=your-super-secret-jwt-key
     # PORT=5000
     ```
@@ -118,9 +118,10 @@ personal-expense-tracker/
     ```
 
 4. **Database Setup**
-    - Install MongoDB locally or set up MongoDB Atlas
-    - Update the `MONGODB_URI` in your backend `.env` file
-    - The database and collections will be created automatically
+    - This project is configured to use MongoDB Atlas cloud database
+    - The MongoDB connection is already set up with the Atlas cluster
+    - Database name: `expense_tracker`
+    - The database and collections will be created automatically when you first run the application
 
 ### Running the Application
 
@@ -154,7 +155,7 @@ personal-expense-tracker/
 ```env
 NODE_ENV=development
 PORT=5000
-MONGODB_URI=mongodb://localhost:27017/expense_tracker
+MONGODB_URI=mongodb+srv://admin:admin@mariyaquiz.gd34udu.mongodb.net/expense_tracker?retryWrites=true&w=majority&appName=mariyaquiz
 JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
 FRONTEND_URL=http://localhost:3000
 ```
