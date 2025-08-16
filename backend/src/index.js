@@ -2,8 +2,14 @@ require("dotenv").config();
 const express = require("express");
 const mongoose = require("mongoose");
 const cors = require("cors");
+const helmet = require("helmet");
+const { generalLimiter } = require("./middleware/rateLimiter");
 
 const app = express();
+
+// Security middleware
+app.use(helmet());
+app.use(generalLimiter);
 
 // Middleware
 app.use(

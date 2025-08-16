@@ -1,5 +1,6 @@
 const express = require("express");
 const router = express.Router();
+const { authLimiter } = require("../middleware/rateLimiter");
 const {
     registerUser,
     loginUser,
@@ -17,6 +18,7 @@ const { authenticateToken } = require("../middleware/auth");
 // @access  Public
 router.post(
     "/register",
+    authLimiter,
     validateUserRegistration,
     handleValidationErrors,
     registerUser
@@ -25,7 +27,13 @@ router.post(
 // @route   POST /api/auth/login
 // @desc    Login user
 // @access  Public
-router.post("/login", validateUserLogin, handleValidationErrors, loginUser);
+router.post(
+    "/login",
+    authLimiter,
+    validateUserLogin,
+    handleValidationErrors,
+    loginUser
+);
 
 // @route   GET /api/auth/profile
 // @desc    Get current user profile
