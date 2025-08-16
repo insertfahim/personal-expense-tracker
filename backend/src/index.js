@@ -43,15 +43,7 @@ app.use("*", (req, res) => {
 });
 
 // Global error handler
-app.use((error, req, res, next) => {
-    console.error("Error:", error);
-
-    res.status(error.status || 500).json({
-        success: false,
-        message: error.message || "Internal server error",
-        ...(process.env.NODE_ENV === "development" && { stack: error.stack }),
-    });
-});
+app.use(require("./middleware/errorHandler"));
 
 // Database connection
 const connectDB = async () => {
