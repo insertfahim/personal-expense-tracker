@@ -67,15 +67,15 @@ const connectDB = async () => {
     }
 };
 
-// Routes
-app.use("/api/auth", require("../backend/src/routes/auth"));
-app.use("/api/expenses", require("../backend/src/routes/expenses"));
-app.use("/api/budgets", require("../backend/src/routes/budgets"));
-app.use("/api/predictive", require("../backend/src/routes/predictive"));
-app.use("/api/savings-goals", require("../backend/src/routes/savingsGoals"));
+// Routes - Note: Vercel strips the /api prefix, so routes are relative
+app.use("/auth", require("../backend/src/routes/auth"));
+app.use("/expenses", require("../backend/src/routes/expenses"));
+app.use("/budgets", require("../backend/src/routes/budgets"));
+app.use("/predictive", require("../backend/src/routes/predictive"));
+app.use("/savings-goals", require("../backend/src/routes/savingsGoals"));
 
 // Health check route with more diagnostic info
-app.get("/api/health", (req, res) => {
+app.get("/health", (req, res) => {
     res.json({
         success: true,
         message: "Personal Expense Tracker API is running!",
@@ -90,14 +90,54 @@ app.get("/api/health", (req, res) => {
             region: process.env.VERCEL_REGION || "unknown",
             url: process.env.VERCEL_URL || "unknown",
         },
+        requestPath: req.path,
+        requestUrl: req.url,
     });
 });
 
-// 404 handler
+// Root endpoint for debugging
+app.get("/", (req, res) => {
+    res.json({
+        success: true,
+        message: "API root - try /health for health check",
+        availableEndpoints: [
+            "/health",
+            "/auth/login",
+            "/expenses",
+            "/budgets",
+            "/predictive",
+            "/savings-goals",
+        ],
+        requestInfo: {
+            path: req.path,
+            url: req.url,
+            method: req.method,
+        },
+    });
+});
+
+// 404 handler with debugging info
 app.use("*", (req, res) => {
+    console.log(
+        `404 - Path not found: ${req.path}, URL: ${req.url}, Method: ${req.method}`
+    );
     res.status(404).json({
         success: false,
         message: "API endpoint not found",
+        debug: {
+            path: req.path,
+            url: req.url,
+            method: req.method,
+            headers: req.headers,
+            availableEndpoints: [
+                "/health",
+                "/auth/login",
+                "/expenses",
+                "/budgets",
+                "/predictive",
+                "/savings-goals",
+            ],
+        },
     });
 });
 
@@ -107,6 +147,8 @@ app.use(require("../backend/src/middleware/errorHandler"));
 // Serverless function wrapper with better error handling
 module.exports = async (req, res) => {
     try {
+        console.log(`Incoming request: ${req.method} ${req.url}`);
+
         // Set CORS headers for all requests
         const origin = req.headers.origin;
         if (

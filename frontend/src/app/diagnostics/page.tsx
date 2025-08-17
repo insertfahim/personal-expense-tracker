@@ -44,7 +44,6 @@ export default function DiagnosticsPage() {
                 headers: {
                     "Content-Type": "application/json",
                 },
-                // Add credentials for CORS
                 credentials: "include",
             });
 
@@ -98,6 +97,42 @@ export default function DiagnosticsPage() {
         }
     };
 
+    const testApiRoot = async () => {
+        try {
+            setError("");
+            setHealthCheck(null);
+
+            const baseUrl = getApiUrl();
+            const url = `${baseUrl}/api/`;
+
+            console.log("Testing API root at:", url);
+
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                throw new Error(
+                    `HTTP ${response.status}: ${response.statusText}`
+                );
+            }
+
+            const data = await response.json();
+            setHealthCheck({
+                apiRoot: data,
+                status: response.status,
+                url: url,
+            });
+        } catch (err) {
+            console.error("API root test error:", err);
+            setError(err instanceof Error ? err.message : "Unknown error");
+        }
+    };
+
     return (
         <div className="min-h-screen bg-gray-50 py-12 px-4">
             <div className="max-w-2xl mx-auto">
@@ -123,8 +158,14 @@ export default function DiagnosticsPage() {
                     <h2 className="text-xl font-semibold mb-4">API Tests</h2>
                     <div className="space-y-4">
                         <button
+                            onClick={testApiRoot}
+                            className="bg-purple-600 text-white px-4 py-2 rounded-lg hover:bg-purple-700"
+                        >
+                            Test API Root
+                        </button>
+                        <button
                             onClick={testHealthCheck}
-                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700"
+                            className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 ml-4"
                         >
                             Test Health Check
                         </button>
