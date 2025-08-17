@@ -2,7 +2,7 @@
 
 import React from "react";
 import { HeatmapData } from "@/types";
-import { Calendar, BarChart3, AlertTriangle } from "lucide-react";
+import { Calendar } from "lucide-react";
 import {
     ResponsiveContainer,
     BarChart,

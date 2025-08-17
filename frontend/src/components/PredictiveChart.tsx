@@ -3,8 +3,6 @@
 import React from "react";
 import { ForecastData } from "@/types";
 import {
-    LineChart,
-    Line,
     XAxis,
     YAxis,
     CartesianGrid,

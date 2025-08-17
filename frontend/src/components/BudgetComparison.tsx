@@ -2,7 +2,7 @@
 
 import React, { useState } from "react";
 import { BudgetComparison as BudgetComparisonType } from "@/types";
-import { AlertTriangle, CheckCircle, ArrowRight } from "lucide-react";
+import { AlertTriangle, CheckCircle } from "lucide-react";
 
 interface BudgetComparisonProps {
     data: BudgetComparisonType;

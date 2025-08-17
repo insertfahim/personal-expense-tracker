@@ -138,8 +138,8 @@ const BudgetManagement: React.FC<BudgetManagementProps> = ({ year, month }) => {
                             No Budgets Set
                         </h3>
                         <p className="text-gray-600 mb-4">
-                            You haven't set any budgets yet. Create a budget to
-                            track your spending.
+                            You haven&apos;t set any budgets yet. Create a
+                            budget to track your spending.
                         </p>
                         {!showForm && (
                             <button

@@ -3,17 +3,7 @@
 import React from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import {
-    User,
-    LogOut,
-    BarChart3,
-    PlusCircle,
-    Menu,
-    DollarSign,
-    TrendingUp,
-    Calendar,
-    Target,
-} from "lucide-react";
+import { User, LogOut, BarChart3, PlusCircle, Menu } from "lucide-react";
 import { useState } from "react";
 
 const Navbar: React.FC = () => {

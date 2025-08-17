@@ -12,7 +12,10 @@ import {
 
 // Type for jsPDF with autotable plugin
 interface jsPDFWithAutoTable extends jsPDF {
-    autoTable: (options: any) => jsPDF;
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    autoTable: ((options: any) => jsPDF) & {
+        previous: { finalY: number };
+    };
 }
 
 // Helper function to format date
@@ -47,7 +50,7 @@ export const exportExpensesToCSV = (expenses: Expense[]): void => {
             expense.amount,
             expense.category,
             formatDate(expense.date),
-            expense.description || "",
+            expense.title || "",
         ]
             .map((item) => {
                 // Handle items with commas by wrapping in quotes
@@ -72,7 +75,7 @@ export const exportExpensesToExcel = (expenses: Expense[]): void => {
         Amount: expense.amount,
         Category: expense.category,
         Date: formatDate(expense.date),
-        Description: expense.description || "",
+        Description: expense.title || "",
     }));
 
     // Create workbook and worksheet
@@ -109,7 +112,7 @@ export const exportExpensesToPDF = (expenses: Expense[]): void => {
         `$${expense.amount.toFixed(2)}`,
         expense.category,
         formatDate(expense.date),
-        expense.description || "",
+        expense.title || "",
     ]);
 
     // Create table

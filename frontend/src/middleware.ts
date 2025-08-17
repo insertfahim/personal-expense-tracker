@@ -1,7 +1,6 @@
 import { NextResponse } from "next/server";
-import type { NextRequest } from "next/server";
 
-export function middleware(_request: NextRequest) {
+export function middleware() {
     // Temporarily disable middleware to allow client-side authentication handling
     // TODO: Implement proper cookie-based authentication for server-side protection
     return NextResponse.next();

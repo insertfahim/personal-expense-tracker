@@ -6,8 +6,6 @@ import { useAuth } from "@/context/AuthContext";
 import { useExpenses } from "@/hooks/useExpenses";
 import {
     BarChart3,
-    PieChart,
-    CreditCard,
     DollarSign,
     LineChart,
     Shield,
@@ -291,7 +289,7 @@ export default function Dashboard() {
                                     </div>
                                 </div>
                                 <p className="text-gray-600 dark:text-gray-300 italic">
-                                    "{testimonial.quote}"
+                                    &quot;{testimonial.quote}&quot;
                                 </p>
                             </div>
                         ))}

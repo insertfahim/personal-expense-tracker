@@ -21,11 +21,7 @@ import SavingsGoalForm from "@/components/SavingsGoalForm";
 import SavingsGoalCard from "@/components/SavingsGoalCard";
 import SavingsGoalSummary from "@/components/SavingsGoalSummary";
 import ContributionForm from "@/components/ContributionForm";
-import {
-    SavingsGoalFormData,
-    ContributionFormData,
-    SavingsGoalCategory,
-} from "@/types";
+import { SavingsGoalFormData, ContributionFormData } from "@/types";
 
 const SavingsGoalsPage: React.FC = () => {
     const { isAuthenticated } = useAuth();
@@ -42,7 +38,6 @@ const SavingsGoalsPage: React.FC = () => {
         isLoading,
         error,
         createGoal,
-        updateGoal,
         deleteGoal,
         addContribution,
         refresh,
