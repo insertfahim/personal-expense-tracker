@@ -87,10 +87,13 @@ const loginUser = async (req, res) => {
     try {
         const { email, password } = req.body;
 
+        console.log(`Login attempt for email: ${email}`); // Debug log
+
         // Find user by email
         const user = await User.findOne({ email });
 
         if (!user) {
+            console.log(`User not found for email: ${email}`); // Debug log
             return res.status(401).json({
                 success: false,
                 message: "Invalid email or password",

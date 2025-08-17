@@ -24,6 +24,14 @@ if not exist .env (
     echo ⚠️  Please update the .env file with your configuration
 )
 
+echo 📦 Installing API dependencies for Vercel...
+cd ..\api
+call npm install
+if %ERRORLEVEL% NEQ 0 (
+    echo ❌ Failed to install API dependencies
+    exit /b 1
+)
+
 echo 📦 Installing frontend dependencies...
 cd ..\frontend
 call npm install

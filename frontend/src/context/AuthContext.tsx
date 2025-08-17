@@ -103,8 +103,26 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             }
         } catch (error: unknown) {
             console.error("Login error:", error);
-            const errorMessage =
-                error instanceof Error ? error.message : "Login failed";
+
+            let errorMessage = "Login failed";
+
+            if (error instanceof Error) {
+                errorMessage = error.message;
+            } else if (typeof error === "object" && error !== null) {
+                const apiError = error as any;
+                if (apiError.response?.data?.message) {
+                    errorMessage = apiError.response.data.message;
+                } else if (apiError.message) {
+                    errorMessage = apiError.message;
+                } else if (
+                    apiError.code === "NETWORK_ERROR" ||
+                    !apiError.response
+                ) {
+                    errorMessage =
+                        "Network error. Please check your connection and try again.";
+                }
+            }
+
             toast.error(errorMessage);
             return false;
         } finally {

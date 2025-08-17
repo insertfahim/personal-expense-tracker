@@ -37,6 +37,8 @@ api.interceptors.request.use((config) => {
 api.interceptors.response.use(
     (response) => response,
     (error) => {
+        console.error("API Error:", error); // Debug log
+
         if (error.response?.status === 401) {
             if (typeof window !== "undefined") {
                 localStorage.removeItem("token");
@@ -45,6 +47,19 @@ api.interceptors.response.use(
                 window.location.href = "/login";
             }
         }
+
+        // Log network errors
+        if (error.code === "NETWORK_ERROR" || !error.response) {
+            console.error("Network Error:", {
+                message: error.message,
+                config: {
+                    baseURL: error.config?.baseURL,
+                    url: error.config?.url,
+                    method: error.config?.method,
+                },
+            });
+        }
+
         return Promise.reject(error);
     }
 );
