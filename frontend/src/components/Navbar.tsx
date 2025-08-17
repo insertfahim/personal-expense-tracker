@@ -3,7 +3,17 @@
 import React from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
-import { User, LogOut, BarChart3, PlusCircle, Menu } from "lucide-react";
+import {
+    User,
+    LogOut,
+    BarChart3,
+    PlusCircle,
+    Menu,
+    DollarSign,
+    TrendingUp,
+    Calendar,
+    Target,
+} from "lucide-react";
 import { useState } from "react";
 
 const Navbar: React.FC = () => {
@@ -48,6 +58,30 @@ const Navbar: React.FC = () => {
                             className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
                         >
                             Analytics
+                        </Link>
+                        <Link
+                            href="/budgets"
+                            className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                        >
+                            Budgets
+                        </Link>
+                        <Link
+                            href="/forecast"
+                            className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                        >
+                            Forecast
+                        </Link>
+                        <Link
+                            href="/heatmap"
+                            className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                        >
+                            Heatmap
+                        </Link>
+                        <Link
+                            href="/savings-goals"
+                            className="text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-sm font-medium transition-colors"
+                        >
+                            Savings Goals
                         </Link>
                         <Link
                             href="/add-expense"
@@ -129,6 +163,34 @@ const Navbar: React.FC = () => {
                                 onClick={() => setIsMobileMenuOpen(false)}
                             >
                                 Analytics
+                            </Link>
+                            <Link
+                                href="/budgets"
+                                className="block text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                Budgets
+                            </Link>
+                            <Link
+                                href="/forecast"
+                                className="block text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                Forecast
+                            </Link>
+                            <Link
+                                href="/heatmap"
+                                className="block text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                Heatmap
+                            </Link>
+                            <Link
+                                href="/savings-goals"
+                                className="block text-gray-700 hover:text-blue-600 px-3 py-2 rounded-md text-base font-medium"
+                                onClick={() => setIsMobileMenuOpen(false)}
+                            >
+                                Savings Goals
                             </Link>
                             <Link
                                 href="/add-expense"

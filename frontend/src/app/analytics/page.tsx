@@ -1,6 +1,6 @@
 "use client";
 
-import React, { useMemo } from "react";
+import React, { useMemo, useState, useEffect } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import {
@@ -14,7 +14,12 @@ import {
     Star,
     RefreshCw,
     Calendar,
+    Download,
 } from "lucide-react";
+import DateRangePicker from "@/components/DateRangePicker";
+import ExportButton from "@/components/ExportButton";
+import { exportAnalyticsToPDF } from "@/lib/exportUtils";
+import { format } from "date-fns";
 import {
     PieChart as RechartsPieChart,
     Pie,
@@ -29,7 +34,6 @@ import {
     Legend,
 } from "recharts";
 import { useExpenseStats } from "@/hooks/useExpenses";
-import { format } from "date-fns";
 
 const AnalyticsPage: React.FC = () => {
     const { isAuthenticated } = useAuth();
@@ -174,7 +178,33 @@ const AnalyticsFeaturePage: React.FC = () => {
 };
 
 const AnalyticsDashboard: React.FC = () => {
-    const { stats, isLoading, error, refresh } = useExpenseStats();
+    const [startDate, setStartDate] = useState<Date | null>(null);
+    const [endDate, setEndDate] = useState<Date | null>(null);
+    const [formattedStartDate, setFormattedStartDate] = useState<
+        string | undefined
+    >(undefined);
+    const [formattedEndDate, setFormattedEndDate] = useState<
+        string | undefined
+    >(undefined);
+
+    const { stats, isLoading, error, refresh } = useExpenseStats({
+        startDate: formattedStartDate,
+        endDate: formattedEndDate,
+    });
+
+    useEffect(() => {
+        setFormattedStartDate(
+            startDate ? format(startDate, "yyyy-MM-dd") : undefined
+        );
+        setFormattedEndDate(
+            endDate ? format(endDate, "yyyy-MM-dd") : undefined
+        );
+    }, [startDate, endDate]);
+
+    const handleDateChange = (start: Date | null, end: Date | null) => {
+        setStartDate(start);
+        setEndDate(end);
+    };
 
     // Color palette for charts
     const colors = useMemo(
@@ -295,6 +325,11 @@ const AnalyticsDashboard: React.FC = () => {
 
                         {/* Controls */}
                         <div className="flex flex-col sm:flex-row gap-3">
+                            <DateRangePicker
+                                startDate={startDate}
+                                endDate={endDate}
+                                onDateChange={handleDateChange}
+                            />
                             <button
                                 onClick={refresh}
                                 className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center"
@@ -302,6 +337,12 @@ const AnalyticsDashboard: React.FC = () => {
                                 <RefreshCw className="h-4 w-4 mr-2" />
                                 Refresh
                             </button>
+                            <ExportButton
+                                onExportPDF={() =>
+                                    stats && exportAnalyticsToPDF(stats)
+                                }
+                                disabled={!stats}
+                            />
                         </div>
                     </div>
                 </div>
@@ -630,6 +671,27 @@ const AnalyticsDashboard: React.FC = () => {
                     >
                         <BarChart3 className="h-5 w-5 mr-2" />
                         View All Expenses
+                    </Link>
+                    <Link
+                        href="/budgets"
+                        className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors inline-flex items-center justify-center"
+                    >
+                        <DollarSign className="h-5 w-5 mr-2" />
+                        Budget Comparison
+                    </Link>
+                    <Link
+                        href="/forecast"
+                        className="bg-purple-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-purple-700 transition-colors inline-flex items-center justify-center"
+                    >
+                        <TrendingUp className="h-5 w-5 mr-2" />
+                        View Forecast
+                    </Link>
+                    <Link
+                        href="/heatmap"
+                        className="bg-green-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-green-700 transition-colors inline-flex items-center justify-center"
+                    >
+                        <Calendar className="h-5 w-5 mr-2" />
+                        View Heatmap
                     </Link>
                     <Link
                         href="/add-expense"

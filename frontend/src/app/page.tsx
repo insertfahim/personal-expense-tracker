@@ -15,6 +15,7 @@ import {
     Filter,
     Zap,
     Smartphone,
+    Target,
 } from "lucide-react";
 
 export default function Dashboard() {
@@ -348,7 +349,7 @@ export default function Dashboard() {
                     </p>
                 </div>
 
-                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                     <div className="bg-white p-6 rounded-lg shadow-md">
                         <div className="text-center">
                             <DollarSign className="h-8 w-8 text-green-600 mx-auto mb-2" />
@@ -377,6 +378,23 @@ export default function Dashboard() {
 
                     <div className="bg-white p-6 rounded-lg shadow-md">
                         <div className="text-center">
+                            <Target className="h-8 w-8 text-purple-600 mx-auto mb-2" />
+                            <p className="text-sm text-gray-600">
+                                Savings Goals
+                            </p>
+                            <Link
+                                href="/savings-goals"
+                                className="text-purple-600 hover:text-purple-700 font-medium"
+                            >
+                                Manage Goals
+                            </Link>
+                        </div>
+                    </div>
+                </div>
+
+                <div className="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+                    <div className="bg-white p-6 rounded-lg shadow-md">
+                        <div className="text-center">
                             <Link
                                 href="/add-expense"
                                 className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors inline-block"
@@ -393,6 +411,17 @@ export default function Dashboard() {
                                 className="border border-blue-600 text-blue-600 px-4 py-2 rounded-lg hover:bg-blue-50 transition-colors inline-block"
                             >
                                 View Expenses
+                            </Link>
+                        </div>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-lg shadow-md">
+                        <div className="text-center">
+                            <Link
+                                href="/analytics"
+                                className="border border-green-600 text-green-600 px-4 py-2 rounded-lg hover:bg-green-50 transition-colors inline-block"
+                            >
+                                View Analytics
                             </Link>
                         </div>
                     </div>

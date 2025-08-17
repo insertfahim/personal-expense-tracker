@@ -263,11 +263,19 @@ const deleteExpense = async (req, res) => {
 // @access  Public (or Private if auth is enabled)
 const getExpenseStats = async (req, res) => {
     try {
+        const { startDate, endDate } = req.query;
         let matchQuery = {};
 
         // Add user filter if authenticated
         if (req.user) {
             matchQuery.user = req.user._id;
+        }
+
+        // Add date range filter
+        if (startDate || endDate) {
+            matchQuery.date = {};
+            if (startDate) matchQuery.date.$gte = new Date(startDate);
+            if (endDate) matchQuery.date.$lte = new Date(endDate);
         }
 
         // Get category-wise statistics
@@ -283,17 +291,21 @@ const getExpenseStats = async (req, res) => {
             { $sort: { total: -1 } },
         ]);
 
-        // Get monthly statistics for current year
-        const currentYear = new Date().getFullYear();
+        // Get monthly statistics (using date range if provided)
+        let monthlyMatchQuery = { ...matchQuery };
+
+        // If no date range is specified, default to current year
+        if (!startDate && !endDate) {
+            const currentYear = new Date().getFullYear();
+            monthlyMatchQuery.date = {
+                $gte: new Date(`${currentYear}-01-01`),
+                $lte: new Date(`${currentYear}-12-31`),
+            };
+        }
+
         const monthlyStats = await Expense.aggregate([
             {
-                $match: {
-                    ...matchQuery,
-                    date: {
-                        $gte: new Date(`${currentYear}-01-01`),
-                        $lte: new Date(`${currentYear}-12-31`),
-                    },
-                },
+                $match: monthlyMatchQuery,
             },
             {
                 $group: {
@@ -339,6 +351,143 @@ const getExpenseStats = async (req, res) => {
     }
 };
 
+// @desc    Get expense heatmap data
+// @route   GET /api/expenses/heatmap
+// @access  Public (or Private if auth is enabled)
+const getExpenseHeatmap = async (req, res) => {
+    try {
+        const { year, month } = req.query;
+
+        // Default to current year and month if not provided
+        const currentDate = new Date();
+        const targetYear = year ? parseInt(year) : currentDate.getFullYear();
+        const targetMonth = month ? parseInt(month) : null;
+
+        let matchQuery = {};
+
+        // Add user filter if authenticated
+        if (req.user) {
+            matchQuery.user = req.user._id;
+        }
+
+        // Add date range filter
+        if (targetMonth) {
+            // For specific month
+            const startDate = new Date(targetYear, targetMonth - 1, 1);
+            const endDate = new Date(targetYear, targetMonth, 0); // Last day of month
+            matchQuery.date = {
+                $gte: startDate,
+                $lte: endDate,
+            };
+        } else {
+            // For entire year
+            const startDate = new Date(targetYear, 0, 1);
+            const endDate = new Date(targetYear, 11, 31);
+            matchQuery.date = {
+                $gte: startDate,
+                $lte: endDate,
+            };
+        }
+
+        // Get daily expense data
+        const dailyData = await Expense.aggregate([
+            { $match: matchQuery },
+            {
+                $group: {
+                    _id: {
+                        year: { $year: "$date" },
+                        month: { $month: "$date" },
+                        day: { $dayOfMonth: "$date" },
+                    },
+                    total: { $sum: "$amount" },
+                    count: { $sum: 1 },
+                },
+            },
+            { $sort: { "_id.year": 1, "_id.month": 1, "_id.day": 1 } },
+        ]);
+
+        // Transform data for heatmap
+        const heatmapData = dailyData.map((item) => ({
+            date: `${item._id.year}-${String(item._id.month).padStart(
+                2,
+                "0"
+            )}-${String(item._id.day).padStart(2, "0")}`,
+            value: item.total,
+            count: item.count,
+        }));
+
+        // Get weekday distribution
+        const weekdayData = await Expense.aggregate([
+            { $match: matchQuery },
+            {
+                $group: {
+                    _id: { $dayOfWeek: "$date" }, // 1 for Sunday, 2 for Monday, ..., 7 for Saturday
+                    total: { $sum: "$amount" },
+                    count: { $sum: 1 },
+                },
+            },
+            { $sort: { _id: 1 } },
+        ]);
+
+        // Transform weekday data
+        const weekdays = [
+            "Sunday",
+            "Monday",
+            "Tuesday",
+            "Wednesday",
+            "Thursday",
+            "Friday",
+            "Saturday",
+        ];
+        const weekdayStats = weekdayData.map((item) => ({
+            dayOfWeek: item._id,
+            name: weekdays[item._id - 1],
+            total: item.total,
+            count: item.count,
+            average: item.total / item.count,
+        }));
+
+        // Calculate statistics
+        let maxDay = { date: null, value: 0 };
+        let totalSpent = 0;
+        let totalDays = 0;
+
+        heatmapData.forEach((day) => {
+            if (day.value > maxDay.value) {
+                maxDay = { date: day.date, value: day.value };
+            }
+            totalSpent += day.value;
+            totalDays++;
+        });
+
+        const avgPerDay = totalDays > 0 ? totalSpent / totalDays : 0;
+
+        res.json({
+            success: true,
+            data: {
+                heatmap: heatmapData,
+                weekdayStats,
+                stats: {
+                    maxDay,
+                    totalSpent,
+                    totalDays,
+                    avgPerDay,
+                },
+                period: {
+                    year: targetYear,
+                    month: targetMonth,
+                },
+            },
+        });
+    } catch (error) {
+        res.status(500).json({
+            success: false,
+            message: "Server error",
+            error: error.message,
+        });
+    }
+};
+
 module.exports = {
     getExpenses,
     getExpenseById,
@@ -346,4 +495,5 @@ module.exports = {
     updateExpense,
     deleteExpense,
     getExpenseStats,
+    getExpenseHeatmap,
 };

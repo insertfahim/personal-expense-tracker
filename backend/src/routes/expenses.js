@@ -7,6 +7,7 @@ const {
     updateExpense,
     deleteExpense,
     getExpenseStats,
+    getExpenseHeatmap,
 } = require("../controllers/expenseController");
 const {
     validateExpense,
@@ -22,6 +23,11 @@ router.use(optionalAuth);
 // @desc    Get expense statistics
 // @access  Public (or Private if auth is enabled)
 router.get("/stats", getExpenseStats);
+
+// @route   GET /api/expenses/heatmap
+// @desc    Get expense heatmap data
+// @access  Public (or Private if auth is enabled)
+router.get("/heatmap", getExpenseHeatmap);
 
 // @route   GET /api/expenses
 // @desc    Get all expenses

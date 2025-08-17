@@ -9,6 +9,15 @@ import {
     LoginFormData,
     RegisterFormData,
     User,
+    Budget,
+    BudgetFormData,
+    BudgetComparison,
+    ForecastData,
+    HeatmapData,
+    SavingsGoal,
+    SavingsGoalFormData,
+    ContributionFormData,
+    SavingsGoalsSummary,
 } from "@/types";
 
 const API_BASE_URL =
@@ -25,11 +34,16 @@ const api = axios.create({
 // Add token to requests if available
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 api.interceptors.request.use((config: any) => {
-    if (typeof window !== "undefined") {
-        const token = localStorage.getItem("token");
-        if (token) {
-            config.headers.Authorization = `Bearer ${token}`;
+    try {
+        if (typeof window !== "undefined" && localStorage) {
+            const token = localStorage.getItem("token");
+            if (token) {
+                config.headers.Authorization = `Bearer ${token}`;
+            }
         }
+    } catch (error) {
+        // Silently handle any localStorage access errors
+        console.log("Error accessing localStorage:", error);
     }
     return config;
 });
@@ -122,9 +136,24 @@ export const expenseAPI = {
     },
 
     // Get expense statistics
-    getStats: async (): Promise<ApiResponse<ExpenseStats>> => {
+    getStats: async (params?: {
+        startDate?: string;
+        endDate?: string;
+    }): Promise<ApiResponse<ExpenseStats>> => {
         const response: AxiosResponse<ApiResponse<ExpenseStats>> =
-            await api.get("/expenses/stats");
+            await api.get("/expenses/stats", { params });
+        return response.data;
+    },
+
+    // Get expense heatmap data
+    getHeatmap: async (params?: {
+        year?: number;
+        month?: number;
+    }): Promise<ApiResponse<HeatmapData>> => {
+        const response: AxiosResponse<ApiResponse<HeatmapData>> = await api.get(
+            "/expenses/heatmap",
+            { params }
+        );
         return response.data;
     },
 };
@@ -164,6 +193,164 @@ export const healthCheck = async (): Promise<
         ApiResponse<{ message: string; timestamp: string }>
     > = await api.get("/health");
     return response.data;
+};
+
+// Budget API functions
+export const budgetAPI = {
+    // Get all budgets
+    getBudgets: async (params?: {
+        year?: number;
+        month?: number;
+        period?: string;
+    }): Promise<ApiResponse<Budget[]>> => {
+        const response: AxiosResponse<ApiResponse<Budget[]>> = await api.get(
+            "/budgets",
+            { params }
+        );
+        return response.data;
+    },
+
+    // Get single budget by ID
+    getBudgetById: async (id: string): Promise<ApiResponse<Budget>> => {
+        const response: AxiosResponse<ApiResponse<Budget>> = await api.get(
+            `/budgets/${id}`
+        );
+        return response.data;
+    },
+
+    // Create new budget
+    createBudget: async (
+        data: BudgetFormData
+    ): Promise<ApiResponse<Budget>> => {
+        const response: AxiosResponse<ApiResponse<Budget>> = await api.post(
+            "/budgets",
+            data
+        );
+        return response.data;
+    },
+
+    // Update budget
+    updateBudget: async (
+        id: string,
+        data: Partial<BudgetFormData>
+    ): Promise<ApiResponse<Budget>> => {
+        const response: AxiosResponse<ApiResponse<Budget>> = await api.patch(
+            `/budgets/${id}`,
+            data
+        );
+        return response.data;
+    },
+
+    // Delete budget
+    deleteBudget: async (id: string): Promise<ApiResponse<Budget>> => {
+        const response: AxiosResponse<ApiResponse<Budget>> = await api.delete(
+            `/budgets/${id}`
+        );
+        return response.data;
+    },
+
+    // Get budget comparison
+    getBudgetComparison: async (params?: {
+        year?: number;
+        month?: number;
+    }): Promise<ApiResponse<BudgetComparison>> => {
+        const response: AxiosResponse<ApiResponse<BudgetComparison>> =
+            await api.get("/budgets/comparison", { params });
+        return response.data;
+    },
+};
+
+// Predictive API functions
+export const predictiveAPI = {
+    // Get spending forecast
+    getForecast: async (params?: {
+        months?: number;
+    }): Promise<ApiResponse<ForecastData>> => {
+        const response: AxiosResponse<ApiResponse<ForecastData>> =
+            await api.get("/predictive/forecast", { params });
+        return response.data;
+    },
+};
+
+// Savings Goals API functions
+export const savingsGoalsAPI = {
+    // Get all savings goals
+    getSavingsGoals: async (params?: {
+        active?: boolean;
+    }): Promise<ApiResponse<SavingsGoal[]>> => {
+        const response: AxiosResponse<ApiResponse<SavingsGoal[]>> =
+            await api.get("/savings-goals", { params });
+        return response.data;
+    },
+
+    // Get single savings goal by ID
+    getSavingsGoalById: async (
+        id: string
+    ): Promise<ApiResponse<SavingsGoal>> => {
+        const response: AxiosResponse<ApiResponse<SavingsGoal>> = await api.get(
+            `/savings-goals/${id}`
+        );
+        return response.data;
+    },
+
+    // Create new savings goal
+    createSavingsGoal: async (
+        data: SavingsGoalFormData
+    ): Promise<ApiResponse<SavingsGoal>> => {
+        const response: AxiosResponse<ApiResponse<SavingsGoal>> =
+            await api.post("/savings-goals", data);
+        return response.data;
+    },
+
+    // Update savings goal
+    updateSavingsGoal: async (
+        id: string,
+        data: Partial<SavingsGoalFormData>
+    ): Promise<ApiResponse<SavingsGoal>> => {
+        const response: AxiosResponse<ApiResponse<SavingsGoal>> =
+            await api.patch(`/savings-goals/${id}`, data);
+        return response.data;
+    },
+
+    // Delete savings goal
+    deleteSavingsGoal: async (
+        id: string
+    ): Promise<ApiResponse<SavingsGoal>> => {
+        const response: AxiosResponse<ApiResponse<SavingsGoal>> =
+            await api.delete(`/savings-goals/${id}`);
+        return response.data;
+    },
+
+    // Add contribution to savings goal
+    addContribution: async (
+        goalId: string,
+        data: ContributionFormData
+    ): Promise<ApiResponse<SavingsGoal>> => {
+        const response: AxiosResponse<ApiResponse<SavingsGoal>> =
+            await api.post(`/savings-goals/${goalId}/contributions`, data);
+        return response.data;
+    },
+
+    // Remove contribution from savings goal
+    removeContribution: async (
+        goalId: string,
+        contributionId: string
+    ): Promise<ApiResponse<SavingsGoal>> => {
+        const response: AxiosResponse<ApiResponse<SavingsGoal>> =
+            await api.delete(
+                `/savings-goals/${goalId}/contributions/${contributionId}`
+            );
+        return response.data;
+    },
+
+    // Get savings goals summary
+    getSavingsGoalsSummary: async (): Promise<
+        ApiResponse<SavingsGoalsSummary>
+    > => {
+        const response: AxiosResponse<ApiResponse<SavingsGoalsSummary>> =
+            await api.get("/savings-goals/summary");
+        return response.data;
+    },
 };
 
 export default api;

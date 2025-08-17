@@ -182,8 +182,14 @@ export const useExpenses = (
     };
 };
 
+interface UseExpenseStatsOptions {
+    startDate?: string;
+    endDate?: string;
+}
+
 // Hook for expense statistics
-export const useExpenseStats = () => {
+export const useExpenseStats = (options: UseExpenseStatsOptions = {}) => {
+    const { startDate, endDate } = options;
     const [stats, setStats] = useState<ExpenseStats | null>(null);
     const [isLoading, setIsLoading] = useState<boolean>(false);
     const [error, setError] = useState<string | null>(null);
@@ -193,8 +199,13 @@ export const useExpenseStats = () => {
             setIsLoading(true);
             setError(null);
 
+            const params = {
+                ...(startDate && { startDate }),
+                ...(endDate && { endDate }),
+            };
+
             const response: ApiResponse<ExpenseStats> =
-                await expenseAPI.getStats();
+                await expenseAPI.getStats(params);
 
             if (response.success && response.data) {
                 setStats(response.data);
@@ -210,7 +221,7 @@ export const useExpenseStats = () => {
         } finally {
             setIsLoading(false);
         }
-    }, []);
+    }, [startDate, endDate]);
 
     useEffect(() => {
         fetchStats();

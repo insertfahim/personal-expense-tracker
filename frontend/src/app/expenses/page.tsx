@@ -10,6 +10,12 @@ import {
     getCategoryColor,
     getCategoryIcon,
 } from "@/lib/utils";
+import {
+    exportExpensesToCSV,
+    exportExpensesToExcel,
+    exportExpensesToPDF,
+} from "@/lib/exportUtils";
+import ExportButton from "@/components/ExportButton";
 import { ExpenseCategory } from "@/types";
 import {
     PlusCircle,
@@ -112,13 +118,27 @@ export default function ExpensesPage() {
                                     Manage and track all your expenses
                                 </p>
                             </div>
-                            <Link
-                                href="/add-expense"
-                                className="mt-4 sm:mt-0 inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
-                            >
-                                <PlusCircle className="h-5 w-5 mr-2" />
-                                Add Expense
-                            </Link>
+                            <div className="mt-4 sm:mt-0 flex gap-3">
+                                <ExportButton
+                                    onExportCSV={() =>
+                                        exportExpensesToCSV(filteredExpenses)
+                                    }
+                                    onExportExcel={() =>
+                                        exportExpensesToExcel(filteredExpenses)
+                                    }
+                                    onExportPDF={() =>
+                                        exportExpensesToPDF(filteredExpenses)
+                                    }
+                                    disabled={filteredExpenses.length === 0}
+                                />
+                                <Link
+                                    href="/add-expense"
+                                    className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
+                                >
+                                    <PlusCircle className="h-5 w-5 mr-2" />
+                                    Add Expense
+                                </Link>
+                            </div>
                         </div>
                     </div>
 
