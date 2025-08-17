@@ -1,7 +1,7 @@
 "use client";
 
 import React, { useState } from "react";
-import { useRouter } from "next/navigation";
+// import { useRouter } from "next/navigation"; // Temporarily disabled
 import Link from "next/link";
 import { useForm } from "react-hook-form";
 import { yupResolver } from "@hookform/resolvers/yup";
@@ -11,7 +11,7 @@ import { LoginFormData } from "@/types";
 import { Eye, EyeOff, LogIn, ArrowLeft } from "lucide-react";
 
 export default function LoginPage() {
-    const router = useRouter();
+    // const router = useRouter(); // Temporarily disabled
     const { login, isLoading } = useAuth();
     const [showPassword, setShowPassword] = useState(false);
 
@@ -25,17 +25,26 @@ export default function LoginPage() {
 
     const onSubmit = async (data: LoginFormData) => {
         console.log("Form submitted with data:", data);
+        console.log("Current API URL:", process.env.NEXT_PUBLIC_API_URL);
+        console.log("Current location:", window.location.href);
+
         try {
             const success = await login(data);
             console.log("Login success:", success);
             if (success) {
                 console.log("Redirecting to home page...");
-                router.push("/");
+                // Force a full page refresh instead of just router.push
+                window.location.href = "/";
             } else {
                 console.log("Login failed");
+                alert("Login failed. Please check your credentials.");
             }
         } catch (error) {
             console.error("Error during login:", error);
+            alert(
+                "Login error: " +
+                    (error instanceof Error ? error.message : "Unknown error")
+            );
         }
     };
 

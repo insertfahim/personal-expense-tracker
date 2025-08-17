@@ -1,4 +1,7 @@
-import axios, { AxiosResponse } from "axios";
+import axios from "axios";
+
+// Simple type for axios response
+type ApiAxiosResponse<T = any> = { data: T };
 import {
     ApiResponse,
     Expense,
@@ -22,6 +25,8 @@ import {
 
 const API_BASE_URL =
     process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000/api";
+
+console.log("API_BASE_URL:", API_BASE_URL); // Debug log
 
 // Create axios instance
 const api = axios.create({
@@ -51,10 +56,30 @@ api.interceptors.request.use((config: any) => {
 // Handle token expiration
 api.interceptors.response.use(
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
-    (response: any) => response,
+    (response: any) => {
+        console.log("API Response received:", {
+            status: response.status,
+            url: response.config.url,
+            data: response.data,
+        });
+        return response;
+    },
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     (error: any) => {
         console.error("API Error:", error); // Debug log
+
+        // Log more detailed error information
+        if (error.response) {
+            console.error("Error response:", {
+                status: error.response.status,
+                data: error.response.data,
+                headers: error.response.headers,
+            });
+        } else if (error.request) {
+            console.error("No response received:", error.request);
+        } else {
+            console.error("Request setup error:", error.message);
+        }
 
         if (error.response?.status === 401) {
             if (typeof window !== "undefined") {
@@ -91,8 +116,7 @@ export const expenseAPI = {
         page?: number;
         limit?: number;
     }): Promise<ApiResponse<ExpenseListResponse>> => {
-        const response: AxiosResponse<ApiResponse<ExpenseListResponse>> =
-            await api.get("/expenses", { params });
+        const response = await api.get("/expenses", { params });
         return response.data;
     },
 
@@ -171,9 +195,20 @@ export const authAPI = {
 
     // Login user
     login: async (data: LoginFormData): Promise<ApiResponse<AuthResponse>> => {
-        const response: AxiosResponse<ApiResponse<AuthResponse>> =
-            await api.post("/auth/login", data);
-        return response.data;
+        console.log("authAPI.login called with:", data);
+        console.log("API_BASE_URL:", API_BASE_URL);
+
+        try {
+            const response = (await api.post(
+                "/auth/login",
+                data
+            )) as ApiAxiosResponse<ApiResponse<AuthResponse>>;
+            console.log("Login API response:", response);
+            return response.data;
+        } catch (error) {
+            console.error("Login API error:", error);
+            throw error;
+        }
     },
 
     // Get current user profile

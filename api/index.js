@@ -20,8 +20,12 @@ app.use(
             "http://localhost:3000",
             "https://expense-tracker-by-fahim.vercel.app",
             "https://*.vercel.app",
+            // Allow all vercel preview deployments
+            /https:\/\/.*\.vercel\.app$/,
         ].filter(Boolean),
         credentials: true,
+        methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
+        allowedHeaders: ["Content-Type", "Authorization"],
     })
 );
 
@@ -48,8 +52,11 @@ const connectDB = async () => {
 };
 
 // Routes
-app.use("/api/expenses", require("../backend/src/routes/expenses"));
 app.use("/api/auth", require("../backend/src/routes/auth"));
+app.use("/api/expenses", require("../backend/src/routes/expenses"));
+app.use("/api/budgets", require("../backend/src/routes/budgets"));
+app.use("/api/predictive", require("../backend/src/routes/predictive"));
+app.use("/api/savings-goals", require("../backend/src/routes/savingsGoals"));
 
 // Health check route
 app.get("/api/health", (req, res) => {
