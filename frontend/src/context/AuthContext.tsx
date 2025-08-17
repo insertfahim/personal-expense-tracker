@@ -9,7 +9,7 @@ import React, {
 } from "react";
 import { User, LoginFormData, RegisterFormData } from "@/types";
 import { authAPI } from "@/lib/api";
-import toast from "react-hot-toast";
+// import toast from "react-hot-toast";
 
 interface AuthContextType {
     user: User | null;
@@ -95,10 +95,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 }
                 setUser(user);
 
-                toast.success("Login successful!");
+                console.log("Login successful!");
                 return true;
             } else {
-                toast.error(response.message || "Login failed");
+                console.error(response.message || "Login failed");
                 return false;
             }
         } catch (error: unknown) {
@@ -108,22 +108,9 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
 
             if (error instanceof Error) {
                 errorMessage = error.message;
-            } else if (typeof error === "object" && error !== null) {
-                const apiError = error as any;
-                if (apiError.response?.data?.message) {
-                    errorMessage = apiError.response.data.message;
-                } else if (apiError.message) {
-                    errorMessage = apiError.message;
-                } else if (
-                    apiError.code === "NETWORK_ERROR" ||
-                    !apiError.response
-                ) {
-                    errorMessage =
-                        "Network error. Please check your connection and try again.";
-                }
             }
 
-            toast.error(errorMessage);
+            console.error(errorMessage);
             return false;
         } finally {
             setIsLoading(false);
@@ -144,17 +131,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 }
                 setUser(user);
 
-                toast.success("Registration successful!");
+                console.log("Registration successful!");
                 return true;
             } else {
-                toast.error(response.message || "Registration failed");
+                console.error(response.message || "Registration failed");
                 return false;
             }
         } catch (error: unknown) {
             console.error("Registration error:", error);
             const errorMessage =
                 error instanceof Error ? error.message : "Registration failed";
-            toast.error(errorMessage);
+            console.error(errorMessage);
             return false;
         } finally {
             setIsLoading(false);
@@ -167,7 +154,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             localStorage.removeItem("user");
         }
         setUser(null);
-        toast.success("Logged out successfully");
+        console.log("Logged out successfully");
     };
 
     const refreshUser = async () => {

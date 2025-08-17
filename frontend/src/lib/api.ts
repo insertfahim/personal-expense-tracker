@@ -23,7 +23,8 @@ const api = axios.create({
 });
 
 // Add token to requests if available
-api.interceptors.request.use((config) => {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+api.interceptors.request.use((config: any) => {
     if (typeof window !== "undefined") {
         const token = localStorage.getItem("token");
         if (token) {
@@ -35,8 +36,10 @@ api.interceptors.request.use((config) => {
 
 // Handle token expiration
 api.interceptors.response.use(
-    (response) => response,
-    (error) => {
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (response: any) => response,
+    // eslint-disable-next-line @typescript-eslint/no-explicit-any
+    (error: any) => {
         console.error("API Error:", error); // Debug log
 
         if (error.response?.status === 401) {

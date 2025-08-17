@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import "./globals.css";
 import { AuthProvider } from "@/context/AuthContext";
-import { Toaster } from "react-hot-toast";
+// import { Toaster } from "react-hot-toast";
 import Navbar from "@/components/Navbar";
 
 const inter = Inter({
@@ -31,6 +31,7 @@ export default function RootLayout({
                         <Navbar />
                         <main className="flex-1">{children}</main>
                     </div>
+                    {/* Toaster component temporarily disabled for build fix
                     <Toaster
                         position="top-right"
                         toastOptions={{
@@ -47,6 +48,7 @@ export default function RootLayout({
                             },
                         }}
                     />
+                    */}
                 </AuthProvider>
             </body>
         </html>
