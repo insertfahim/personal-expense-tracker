@@ -1,50 +1,105 @@
 # 💰 Personal Expense Tracker
 
-A full-stack MERN application for tracking personal expenses with a modern, responsive design. Built with Next.js frontend and Node.js/Express backend with MongoDB database.
+<div align="center">
 
-## ✨ Features
+![Personal Expense Tracker](https://img.shields.io/badge/Personal-Expense%20Tracker-blue?style=for-the-badge)
+![Next.js](https://img.shields.io/badge/Next.js-15.4.6-black?style=for-the-badge&logo=next.js)
+![Node.js](https://img.shields.io/badge/Node.js-18+-green?style=for-the-badge&logo=node.js)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-green?style=for-the-badge&logo=mongodb)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-blue?style=for-the-badge&logo=typescript)
 
-### Core Features
+**A modern, full-stack MERN application for tracking personal expenses with real-time analytics and beautiful UI**
 
--   **User Authentication**: Secure JWT-based authentication with registration and login
--   **Expense Management**: Full CRUD operations for expenses (Create, Read, Update, Delete)
--   **Categories**: Organize expenses into predefined categories (Food, Transport, Shopping, Entertainment, Healthcare, Bills, Others)
--   **Real-time Validation**: Client and server-side form validation with helpful error messages
--   **Responsive Design**: Mobile-first responsive design that works on all devices
+[🚀 Live Demo](https://your-app-url.vercel.app) • [📖 Documentation](#-documentation) • [🐛 Report Bug](https://github.com/insertfahim/personal-expense-tracker/issues) • [💡 Request Feature](https://github.com/insertfahim/personal-expense-tracker/issues)
 
-### Advanced Features
+</div>
 
--   **Search & Filter**: Search expenses by title and filter by category
--   **Statistics Dashboard**: View total expenses, transaction counts, and averages
--   **Visual Analytics**: Beautiful charts and graphs using Recharts (planned)
--   **Date Range Filtering**: Filter expenses by date range (planned)
--   **Export Data**: Export expense data to CSV (planned)
+---
 
-## 🛠 Tech Stack
+## 🌟 **Overview**
 
-### Frontend
+Personal Expense Tracker is a comprehensive, full-stack web application designed to help users manage their personal finances with ease. Built with modern web technologies, it offers a seamless experience for tracking expenses, analyzing spending patterns, and maintaining financial awareness.
 
--   **Next.js 14+**: React framework with App Router
--   **TypeScript**: Type-safe development
--   **Tailwind CSS**: Utility-first CSS framework
--   **React Hook Form**: Form handling and validation
--   **Yup**: Schema validation
--   **Axios**: HTTP client for API requests
--   **React Hot Toast**: Toast notifications
--   **Lucide React**: Beautiful icons
--   **Recharts**: Charts and data visualization
+### **✨ Key Highlights**
 
-### Backend
+-   🔒 **Secure Authentication** - JWT-based user authentication with password hashing
+-   📊 **Real-time Analytics** - Interactive charts and spending insights
+-   🎨 **Modern UI/UX** - Responsive design with Tailwind CSS and smooth animations
+-   🚀 **Cloud Ready** - Optimized for Vercel deployment with serverless functions
+-   📱 **Mobile First** - Fully responsive design that works on all devices
+-   ⚡ **Fast Performance** - Optimized with Next.js 15 and Turbopack
 
--   **Node.js**: JavaScript runtime
--   **Express.js**: Web framework
--   **MongoDB**: NoSQL database
--   **Mongoose**: MongoDB object modeling
--   **JWT**: JSON Web Tokens for authentication
--   **bcryptjs**: Password hashing
--   **Express Validator**: Request validation middleware
--   **CORS**: Cross-origin resource sharing
--   **dotenv**: Environment variable management
+---
+
+## 🎯 **Features**
+
+### **🔐 Authentication & Security**
+
+-   [x] User registration and login with validation
+-   [x] JWT-based secure authentication
+-   [x] Password hashing with bcryptjs
+-   [x] Protected routes and middleware
+-   [x] Session management with auto-logout
+
+### **💰 Expense Management**
+
+-   [x] Create, read, update, and delete expenses
+-   [x] Categorize expenses (Food, Transport, Shopping, Entertainment, Healthcare, Bills, Others)
+-   [x] Search expenses by title or description
+-   [x] Filter by category and date range
+-   [x] Bulk operations support
+
+### **📈 Analytics & Insights**
+
+-   [x] Real-time expense statistics
+-   [x] Monthly and yearly spending summaries
+-   [x] Category-wise expense breakdown
+-   [x] Interactive charts with Recharts
+-   [x] Spending trends visualization
+
+### **🎨 User Experience**
+
+-   [x] Intuitive and clean interface
+-   [x] Real-time form validation
+-   [x] Toast notifications for user feedback
+-   [x] Loading states and error handling
+-   [x] Dark/Light mode support (coming soon)
+
+### **🚀 Performance & Deployment**
+
+-   [x] Optimized for Vercel serverless deployment
+-   [x] API route optimization
+-   [x] Database connection pooling
+-   [x] Image optimization
+-   [x] Code splitting and lazy loading
+
+---
+
+## 🛠 **Technology Stack**
+
+<div align="center">
+
+### **Frontend**
+
+![Next.js](https://img.shields.io/badge/Next.js-15.4.6-000000?style=flat&logo=nextdotjs&logoColor=white)
+![TypeScript](https://img.shields.io/badge/TypeScript-5.0+-3178C6?style=flat&logo=typescript&logoColor=white)
+![React](https://img.shields.io/badge/React-19.1.0-61DAFB?style=flat&logo=react&logoColor=black)
+![Tailwind CSS](https://img.shields.io/badge/Tailwind%20CSS-4.0-06B6D4?style=flat&logo=tailwindcss&logoColor=white)
+
+### **Backend**
+
+![Node.js](https://img.shields.io/badge/Node.js-18+-339933?style=flat&logo=nodedotjs&logoColor=white)
+![Express](https://img.shields.io/badge/Express.js-4.18.2-000000?style=flat&logo=express&logoColor=white)
+![MongoDB](https://img.shields.io/badge/MongoDB-Atlas-47A248?style=flat&logo=mongodb&logoColor=white)
+![JWT](https://img.shields.io/badge/JWT-Authentication-000000?style=flat&logo=jsonwebtokens&logoColor=white)
+
+### **Tools & Libraries**
+
+![Axios](https://img.shields.io/badge/Axios-1.11.0-671DDF?style=flat&logo=axios&logoColor=white)
+![React Hook Form](https://img.shields.io/badge/React%20Hook%20Form-7.62.0-EC5990?style=flat&logo=reacthookform&logoColor=white)
+![Recharts](https://img.shields.io/badge/Recharts-3.1.2-FF6C37?style=flat)
+
+</div>
 
 ## 📁 Project Structure
 
@@ -72,20 +127,23 @@ personal-expense-tracker/
 └── README.md
 ```
 
-## 🚀 Getting Started
+---
 
-### Prerequisites
+## 🚀 **Quick Start**
 
--   Node.js (v18 or later)
--   MongoDB (local installation or MongoDB Atlas)
--   npm or yarn package manager
+### **Prerequisites**
 
-### Installation
+-   Node.js 18+ installed
+-   MongoDB Atlas account (or local MongoDB)
+-   Git installed
+-   Code editor (VS Code recommended)
+
+### **🔧 Installation**
 
 1. **Clone the repository**
 
     ```bash
-    git clone <repository-url>
+    git clone https://github.com/insertfahim/personal-expense-tracker.git
     cd personal-expense-tracker
     ```
 
@@ -94,14 +152,17 @@ personal-expense-tracker/
     ```bash
     cd backend
     npm install
-
-    # Create environment file
     cp .env.example .env
+    ```
 
-    # Edit .env with your configuration
-    # MONGODB_URI=mongodb+srv://admin:admin@mariyaquiz.gd34udu.mongodb.net/expense_tracker?retryWrites=true&w=majority&appName=mariyaquiz
-    # JWT_SECRET=your-super-secret-jwt-key
-    # PORT=5000
+    **Edit `.env` file:**
+
+    ```env
+    NODE_ENV=development
+    PORT=5000
+    MONGODB_URI=mongodb+srv://admin:admin@mariyaquiz.gd34udu.mongodb.net/personal_expense_tracker?retryWrites=true&w=majority&appName=mariyaquiz
+    JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+    FRONTEND_URL=http://localhost:3000
     ```
 
 3. **Frontend Setup**
@@ -109,161 +170,121 @@ personal-expense-tracker/
     ```bash
     cd ../frontend
     npm install
-
-    # Create environment file
-    cp .env.local.example .env.local
-
-    # Edit .env.local with your configuration
-    # NEXT_PUBLIC_API_URL=http://localhost:5000/api
     ```
 
-4. **Database Setup**
-    - This project is configured to use MongoDB Atlas cloud database
-    - The MongoDB connection is already set up with the Atlas cluster
-    - Database name: `expense_tracker`
-    - The database and collections will be created automatically when you first run the application
+    **Create `.env.local` file:**
 
-### Running the Application
+    ```env
+    NEXT_PUBLIC_API_URL=http://localhost:5000/api
+    NEXT_PUBLIC_APP_NAME=Personal Expense Tracker
+    ```
 
-1. **Start the Backend Server**
+### **🖥️ Running the Application**
+
+1. **Start Backend Server**
 
     ```bash
     cd backend
     npm run dev
     ```
 
-    The API server will start on http://localhost:5000
+    Server will run on `http://localhost:5000`
 
-2. **Start the Frontend Application**
+2. **Start Frontend Application**
 
     ```bash
     cd frontend
     npm run dev
     ```
 
-    The web application will be available at http://localhost:3000
+    Application will run on `http://localhost:3000`
 
 3. **Access the Application**
-    - Open your browser and navigate to http://localhost:3000
-    - Register a new account or use demo credentials (if provided)
-    - Start tracking your expenses!
+    - Open browser and go to `http://localhost:3000`
+    - Register a new account or login
+    - Start tracking your expenses! 🎉
 
-## 🔧 Configuration
+---
 
-### Backend Environment Variables
+## 🔧 **Environment Configuration**
+
+### **Development Environment**
 
 ```env
+# Backend (.env)
 NODE_ENV=development
 PORT=5000
-MONGODB_URI=mongodb+srv://admin:admin@mariyaquiz.gd34udu.mongodb.net/expense_tracker?retryWrites=true&w=majority&appName=mariyaquiz
-JWT_SECRET=your-super-secret-jwt-key-change-this-in-production
+MONGODB_URI=mongodb+srv://admin:admin@mariyaquiz.gd34udu.mongodb.net/personal_expense_tracker?retryWrites=true&w=majority&appName=mariyaquiz
+JWT_SECRET=development-secret-key
 FRONTEND_URL=http://localhost:3000
-```
 
-### Frontend Environment Variables
-
-```env
+# Frontend (.env.local)
 NEXT_PUBLIC_API_URL=http://localhost:5000/api
 NEXT_PUBLIC_APP_NAME=Personal Expense Tracker
 ```
 
-## 📊 API Endpoints
+### **Production Environment**
 
-### Authentication
+```env
+# Vercel Environment Variables
+MONGODB_URI=mongodb+srv://username:password@cluster.mongodb.net/personal_expense_tracker
+JWT_SECRET=super-secure-production-secret
+NODE_ENV=production
+FRONTEND_URL=https://your-app.vercel.app
+```
 
--   `POST /api/auth/register` - Register new user
--   `POST /api/auth/login` - User login
--   `GET /api/auth/profile` - Get user profile (Protected)
+---
 
-### Expenses
+## 🧪 **Testing**
 
--   `GET /api/expenses` - Get all expenses with pagination and filters
--   `GET /api/expenses/:id` - Get single expense
--   `POST /api/expenses` - Create new expense (Protected)
--   `PATCH /api/expenses/:id` - Update expense (Protected)
--   `DELETE /api/expenses/:id` - Delete expense (Protected)
--   `GET /api/expenses/stats` - Get expense statistics (Protected)
-
-### Health Check
-
--   `GET /api/health` - API health status
-
-## 💡 Usage Examples
-
-### Adding an Expense
-
-1. Click "Add Expense" from the dashboard or navigation
-2. Fill in the expense details:
-    - Title: "Lunch at McDonald's"
-    - Amount: 12.50
-    - Category: Food
-    - Date: Select date
-3. Click "Add Expense" to save
-
-### Filtering Expenses
-
--   Use the search bar to find expenses by title
--   Select a category from the dropdown to filter by category
--   Combine search and category filters for precise results
-
-### Managing Expenses
-
--   Click the edit icon to modify an expense
--   Click the delete icon to remove an expense (with confirmation)
--   View expense statistics on the dashboard
-
-## 🧪 Testing
-
-### Backend Testing
+### **Backend Tests**
 
 ```bash
 cd backend
-npm test
+npm test                # Run all tests
+npm run test:watch     # Run tests in watch mode
+npm run test:coverage  # Run tests with coverage
 ```
 
-### Frontend Testing
+### **Frontend Tests**
 
 ```bash
 cd frontend
-npm test
+npm test               # Run component tests
+npm run test:e2e      # Run end-to-end tests
 ```
 
-## 🚀 Deployment
+### **API Testing with Thunder Client/Postman**
 
-### Backend Deployment (Railway/Heroku)
+Import the API collection from `/docs/api-collection.json`
 
-1. Set up your production database (MongoDB Atlas recommended)
-2. Configure environment variables in your hosting platform
-3. Deploy the backend directory
+---
 
-### Frontend Deployment (Vercel/Netlify)
+## 🤝 **Contributing**
 
-1. Update `NEXT_PUBLIC_API_URL` to point to your production API
-2. Deploy the frontend directory
-3. Configure build settings if necessary
+We welcome contributions! Please follow these steps:
 
-### Environment-Specific Configurations
+### **Getting Started**
 
--   **Development**: Uses local MongoDB and development settings
--   **Production**: Uses MongoDB Atlas and optimized settings
+1. **Fork the repository**
+2. **Create a feature branch**
+    ```bash
+    git checkout -b feature/amazing-feature
+    ```
+3. **Make your changes**
+4. **Commit your changes**
+    ```bash
+    git commit -m 'feat: add amazing feature'
+    ```
+5. **Push to the branch**
+    ```bash
+    git push origin feature/amazing-feature
+    ```
+6. **Open a Pull Request**
 
-## 📱 Screenshots
+### **Commit Convention**
 
-[Add screenshots of your application here]
-
-## 🤝 Contributing
-
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
-
-## 📝 Development Notes
-
-### Git Commit Guidelines
-
-This project follows meaningful commit messages:
+We use [Conventional Commits](https://www.conventionalcommits.org/):
 
 -   `feat:` New features
 -   `fix:` Bug fixes
@@ -271,69 +292,263 @@ This project follows meaningful commit messages:
 -   `style:` Code style changes
 -   `refactor:` Code refactoring
 -   `test:` Adding tests
-
-### Code Style
-
--   Frontend: ESLint + Prettier configuration for consistent code style
--   Backend: Node.js best practices with proper error handling
--   TypeScript: Strict type checking enabled
-
-## 🔒 Security Features
-
--   **Password Hashing**: Uses bcryptjs for secure password storage
--   **JWT Authentication**: Secure token-based authentication
--   **Input Validation**: Server and client-side validation
--   **CORS Protection**: Configured cross-origin resource sharing
--   **Environment Variables**: Sensitive data stored in environment files
-
-## 📈 Performance Optimizations
-
--   **Database Indexing**: Optimized MongoDB queries with proper indexing
--   **API Pagination**: Paginated responses for large datasets
--   **Frontend Caching**: React Query for efficient data caching
--   **Image Optimization**: Next.js built-in image optimization
--   **Bundle Splitting**: Automatic code splitting with Next.js
-
-## 🆘 Troubleshooting
-
-### Common Issues
-
-1. **Connection Errors**
-
-    - Verify MongoDB is running and connection string is correct
-    - Check if backend server is running on the correct port
-
-2. **Authentication Issues**
-
-    - Ensure JWT_SECRET is set in backend environment
-    - Clear browser localStorage if facing login issues
-
-3. **Build Errors**
-    - Delete node_modules and package-lock.json, then reinstall
-    - Check for TypeScript errors in the terminal
-
-## 📚 Learning Resources
-
--   [Next.js Documentation](https://nextjs.org/docs)
--   [Express.js Guide](https://expressjs.com/en/guide/routing.html)
--   [MongoDB Manual](https://docs.mongodb.com/)
--   [Tailwind CSS Documentation](https://tailwindcss.com/docs)
-
-## 📄 License
-
-This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
-
-## 👨‍💻 Author
-
-Created as part of a MERN Stack Developer Assessment Task.
-
-## 🙏 Acknowledgments
-
--   Icons by [Lucide](https://lucide.dev/)
--   UI Components inspired by modern design patterns
--   MongoDB for excellent database documentation
--   Next.js team for the amazing React framework
+-   `chore:` Build process or auxiliary tool changes
 
 ---
 
-**Note**: This is a demonstration project showcasing full-stack development skills with modern web technologies. The focus is on clean code, proper architecture, and user-friendly design.
+## 📊 **API Documentation**
+
+### **Authentication Endpoints**
+
+| Method | Endpoint             | Description       | Auth Required |
+| ------ | -------------------- | ----------------- | ------------- |
+| `POST` | `/api/auth/register` | Register new user | ❌            |
+| `POST` | `/api/auth/login`    | User login        | ❌            |
+| `GET`  | `/api/auth/profile`  | Get user profile  | ✅            |
+
+### **Expense Endpoints**
+
+| Method   | Endpoint              | Description                  | Auth Required |
+| -------- | --------------------- | ---------------------------- | ------------- |
+| `GET`    | `/api/expenses`       | Get all expenses (paginated) | ✅            |
+| `GET`    | `/api/expenses/:id`   | Get single expense           | ✅            |
+| `POST`   | `/api/expenses`       | Create new expense           | ✅            |
+| `PATCH`  | `/api/expenses/:id`   | Update expense               | ✅            |
+| `DELETE` | `/api/expenses/:id`   | Delete expense               | ✅            |
+| `GET`    | `/api/expenses/stats` | Get expense statistics       | ✅            |
+
+### **Utility Endpoints**
+
+| Method | Endpoint      | Description      | Auth Required |
+| ------ | ------------- | ---------------- | ------------- |
+| `GET`  | `/api/health` | API health check | ❌            |
+
+### **Example API Usage**
+
+**Create Expense:**
+
+```javascript
+POST /api/expenses
+Content-Type: application/json
+Authorization: Bearer <your-jwt-token>
+
+{
+  "title": "Lunch at McDonald's",
+  "amount": 12.50,
+  "category": "Food",
+  "date": "2025-08-16",
+  "description": "Quick lunch break"
+}
+```
+
+**Response:**
+
+```javascript
+{
+  "success": true,
+  "data": {
+    "_id": "66c123...",
+    "title": "Lunch at McDonald's",
+    "amount": 12.50,
+    "category": "Food",
+    "date": "2025-08-16T00:00:00.000Z",
+    "description": "Quick lunch break",
+    "user": "66c456...",
+    "createdAt": "2025-08-16T10:30:00.000Z"
+  }
+}
+```
+
+---
+
+## � **Security Features**
+
+-   🔐 **Password Security**: bcryptjs hashing with salt rounds
+-   🛡️ **JWT Authentication**: Secure token-based auth with expiration
+-   🚫 **Input Validation**: Server & client-side validation
+-   🌐 **CORS Protection**: Configured cross-origin policies
+-   🔒 **Environment Security**: Sensitive data in environment variables
+-   ⚡ **Rate Limiting**: API rate limiting to prevent abuse
+-   🛡️ **Helmet.js**: Security headers protection
+
+---
+
+## 📈 **Performance Optimizations**
+
+-   ⚡ **Database Indexing**: Optimized MongoDB queries
+-   📄 **Pagination**: Efficient data loading
+-   🗄️ **Caching**: React Query for client-side caching
+-   🎯 **Code Splitting**: Automatic with Next.js
+-   🖼️ **Image Optimization**: Next.js built-in optimization
+-   📦 **Bundle Analysis**: Optimized bundle sizes
+-   🚀 **Edge Functions**: Vercel serverless optimization
+
+---
+
+## 🆘 **Troubleshooting**
+
+### **Common Issues**
+
+#### **Database Connection Issues**
+
+```bash
+# Check MongoDB connection
+MongoDB Connected: ✅ or Connection failed: ❌
+
+# Solutions:
+1. Verify MONGODB_URI in .env file
+2. Check MongoDB Atlas network access
+3. Ensure correct database name: personal_expense_tracker
+4. Verify Atlas credentials
+```
+
+#### **Authentication Problems**
+
+```bash
+# JWT Token Issues
+- Clear localStorage: localStorage.clear()
+- Check JWT_SECRET in backend .env
+- Verify token expiration
+```
+
+#### **Build Errors**
+
+```bash
+# Clean install
+rm -rf node_modules package-lock.json
+npm install
+
+# TypeScript errors
+npm run type-check
+```
+
+---
+
+## 🗺️ **Roadmap**
+
+### **Phase 1: Core Features** ✅
+
+-   [x] User authentication
+-   [x] CRUD operations for expenses
+-   [x] Basic analytics
+-   [x] Responsive design
+-   [x] Vercel deployment setup
+
+### **Phase 2: Enhanced Features** 🚧
+
+-   [ ] Advanced analytics dashboard
+-   [ ] Data export functionality
+-   [ ] Budget planning and tracking
+-   [ ] Receipt image upload
+-   [ ] Multi-currency support
+
+### **Phase 3: Advanced Features** 📋
+
+-   [ ] Dark/Light mode toggle
+-   [ ] Progressive Web App (PWA)
+-   [ ] Offline functionality
+-   [ ] Push notifications
+-   [ ] Social sharing
+
+---
+
+## 🚀 **Deployment**
+
+### **Vercel Deployment (Recommended)**
+
+1. **Prepare for Deployment**
+
+    ```bash
+    # Ensure all changes are committed
+    git add .
+    git commit -m "feat: prepare for deployment"
+    git push origin main
+    ```
+
+2. **Deploy to Vercel**
+
+    - Connect your GitHub repository to Vercel
+    - Import your project: `personal-expense-tracker`
+    - Configure build settings:
+        - Build Command: `cd frontend && npm run build`
+        - Output Directory: `frontend/.next`
+        - Install Command: `npm install`
+
+3. **Environment Variables in Vercel**
+
+    ```env
+    MONGODB_URI=your-mongodb-atlas-connection-string
+    JWT_SECRET=your-super-secure-secret
+    NODE_ENV=production
+    FRONTEND_URL=https://your-app-name.vercel.app
+    ```
+
+4. **Deploy!**
+    - Click "Deploy" and your app will be live! 🎉
+    - Your app will be available at `https://your-app-name.vercel.app`
+
+### **Alternative Deployment Options**
+
+#### **Railway (Backend)**
+
+```bash
+# Install Railway CLI
+npm install -g @railway/cli
+
+# Login and deploy
+railway login
+railway init
+railway up
+```
+
+#### **Netlify (Frontend)**
+
+-   Build Command: `cd frontend && npm run build`
+-   Publish Directory: `frontend/out`
+
+---
+
+## � **License**
+
+This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) file for details.
+
+---
+
+## 👨‍💻 **Author & Acknowledgments**
+
+<div align="center">
+
+**Created with ❤️ by [insertfahim](https://github.com/insertfahim)**
+
+### **Special Thanks**
+
+-   🎯 **Next.js Team** - Amazing React framework
+-   🚀 **Vercel Team** - Seamless deployment platform
+-   🍃 **MongoDB** - Excellent database solution
+-   🎨 **Tailwind CSS** - Beautiful utility-first CSS
+-   🔧 **Open Source Community** - Incredible tools and libraries
+
+### **Connect & Support**
+
+[![GitHub followers](https://img.shields.io/github/followers/insertfahim?style=social)](https://github.com/insertfahim)
+[![GitHub stars](https://img.shields.io/github/stars/insertfahim/personal-expense-tracker?style=social)](https://github.com/insertfahim/personal-expense-tracker)
+
+**Found this project helpful? Give it a ⭐ on GitHub!**
+
+</div>
+
+---
+
+<div align="center">
+
+### **🚀 Ready to start tracking your expenses?**
+
+[**Live Demo**](https://your-app-url.vercel.app) • [**Deploy Your Own**](https://vercel.com/import/project?template=https://github.com/insertfahim/personal-expense-tracker)
+
+---
+
+**Built with modern web technologies • Deployed on Vercel • Database powered by MongoDB Atlas**
+
+_This project demonstrates full-stack development skills with modern web technologies, clean architecture, and best practices for production-ready applications._
+
+</div>
