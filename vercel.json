@@ -23,8 +23,11 @@
     "env": {
         "MONGODB_URI": "mongodb+srv://admin:admin@mariyaquiz.gd34udu.mongodb.net/personal_expense_tracker?retryWrites=true&w=majority&appName=mariyaquiz",
         "JWT_SECRET": "your-super-secure-jwt-key-change-this-in-production-please-change-this",
-        "NODE_ENV": "production",
-        "NEXT_PUBLIC_API_URL": "https://expense-tracker-by-fahim.vercel.app/api",
-        "FRONTEND_URL": "https://expense-tracker-by-fahim.vercel.app"
+        "NODE_ENV": "production"
+    },
+    "functions": {
+        "api/index.js": {
+            "maxDuration": 10
+        }
     }
 }

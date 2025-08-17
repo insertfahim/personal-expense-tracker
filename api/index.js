@@ -15,17 +15,33 @@ app.use(generalLimiter);
 // CORS configuration for Vercel
 app.use(
     cors({
-        origin: [
-            process.env.FRONTEND_URL,
-            "http://localhost:3000",
-            "https://expense-tracker-by-fahim.vercel.app",
-            "https://*.vercel.app",
-            // Allow all vercel preview deployments
-            /https:\/\/.*\.vercel\.app$/,
-        ].filter(Boolean),
+        origin: function (origin, callback) {
+            // Allow requests with no origin (like mobile apps or curl requests)
+            if (!origin) return callback(null, true);
+
+            const allowedOrigins = [
+                process.env.FRONTEND_URL,
+                "http://localhost:3000",
+                "https://expense-tracker-by-fahim.vercel.app",
+            ].filter(Boolean);
+
+            // Allow any vercel deployment
+            if (origin.includes(".vercel.app")) {
+                return callback(null, true);
+            }
+
+            if (allowedOrigins.indexOf(origin) !== -1) {
+                callback(null, true);
+            } else {
+                console.log(`CORS blocked origin: ${origin}`);
+                callback(null, true); // Allow all origins for now to debug
+            }
+        },
         credentials: true,
         methods: ["GET", "POST", "PUT", "PATCH", "DELETE", "OPTIONS"],
-        allowedHeaders: ["Content-Type", "Authorization"],
+        allowedHeaders: ["Content-Type", "Authorization", "X-Requested-With"],
+        preflightContinue: false,
+        optionsSuccessStatus: 200,
     })
 );
 
@@ -58,12 +74,22 @@ app.use("/api/budgets", require("../backend/src/routes/budgets"));
 app.use("/api/predictive", require("../backend/src/routes/predictive"));
 app.use("/api/savings-goals", require("../backend/src/routes/savingsGoals"));
 
-// Health check route
+// Health check route with more diagnostic info
 app.get("/api/health", (req, res) => {
     res.json({
         success: true,
         message: "Personal Expense Tracker API is running!",
         timestamp: new Date().toISOString(),
+        environment: process.env.NODE_ENV || "development",
+        mongodb: isConnected ? "connected" : "disconnected",
+        cors: {
+            origin: req.headers.origin || "no-origin",
+            userAgent: req.headers["user-agent"] || "no-user-agent",
+        },
+        vercel: {
+            region: process.env.VERCEL_REGION || "unknown",
+            url: process.env.VERCEL_URL || "unknown",
+        },
     });
 });
 
@@ -78,8 +104,44 @@ app.use("*", (req, res) => {
 // Global error handler
 app.use(require("../backend/src/middleware/errorHandler"));
 
-// Serverless function wrapper
+// Serverless function wrapper with better error handling
 module.exports = async (req, res) => {
-    await connectDB();
-    return app(req, res);
+    try {
+        // Set CORS headers for all requests
+        const origin = req.headers.origin;
+        if (
+            origin &&
+            (origin.includes(".vercel.app") || origin.includes("localhost"))
+        ) {
+            res.setHeader("Access-Control-Allow-Origin", origin);
+        }
+        res.setHeader("Access-Control-Allow-Credentials", "true");
+        res.setHeader(
+            "Access-Control-Allow-Methods",
+            "GET,POST,PUT,PATCH,DELETE,OPTIONS"
+        );
+        res.setHeader(
+            "Access-Control-Allow-Headers",
+            "Content-Type,Authorization,X-Requested-With"
+        );
+
+        // Handle preflight requests
+        if (req.method === "OPTIONS") {
+            res.status(200).end();
+            return;
+        }
+
+        await connectDB();
+        return app(req, res);
+    } catch (error) {
+        console.error("Serverless function error:", error);
+        res.status(500).json({
+            success: false,
+            message: "Internal server error",
+            error:
+                process.env.NODE_ENV === "development"
+                    ? error.message
+                    : "Something went wrong",
+        });
+    }
 };

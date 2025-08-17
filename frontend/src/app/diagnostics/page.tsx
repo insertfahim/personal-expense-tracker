@@ -11,21 +11,53 @@ export default function DiagnosticsPage() {
     const [error, setError] = useState("");
 
     useEffect(() => {
-        setApiUrl(process.env.NEXT_PUBLIC_API_URL || "Not set");
+        const envApiUrl = process.env.NEXT_PUBLIC_API_URL || "Not set";
+        const currentDomain =
+            typeof window !== "undefined" ? window.location.origin : "Unknown";
+        setApiUrl(
+            `Environment: ${envApiUrl} | Current Domain: ${currentDomain}`
+        );
     }, []);
+
+    const getApiUrl = () => {
+        // For production, use relative URLs to work with the current domain
+        if (typeof window !== "undefined") {
+            const origin = window.location.origin;
+            return origin;
+        }
+        // Fallback to environment variable or localhost
+        return process.env.NEXT_PUBLIC_API_URL || "http://localhost:5000";
+    };
 
     const testHealthCheck = async () => {
         try {
             setError("");
-            const response = await fetch(
-                `${
-                    process.env.NEXT_PUBLIC_API_URL ||
-                    "http://localhost:5000/api"
-                }/health`
-            );
+            setHealthCheck(null);
+
+            const baseUrl = getApiUrl();
+            const url = `${baseUrl}/api/health`;
+
+            console.log("Testing health check at:", url);
+
+            const response = await fetch(url, {
+                method: "GET",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                // Add credentials for CORS
+                credentials: "include",
+            });
+
+            if (!response.ok) {
+                throw new Error(
+                    `HTTP ${response.status}: ${response.statusText}`
+                );
+            }
+
             const data = await response.json();
             setHealthCheck(data);
         } catch (err) {
+            console.error("Health check error:", err);
             setError(err instanceof Error ? err.message : "Unknown error");
         }
     };
@@ -33,26 +65,35 @@ export default function DiagnosticsPage() {
     const testLoginApi = async () => {
         try {
             setError("");
-            const response = await fetch(
-                `${
-                    process.env.NEXT_PUBLIC_API_URL ||
-                    "http://localhost:5000/api"
-                }/auth/login`,
-                {
-                    method: "POST",
-                    headers: {
-                        "Content-Type": "application/json",
-                    },
-                    body: JSON.stringify({
-                        email: "test@example.com",
-                        password: "wrongpassword",
-                    }),
-                }
-            );
+            setHealthCheck(null);
+
+            const baseUrl = getApiUrl();
+            const url = `${baseUrl}/api/auth/login`;
+
+            console.log("Testing login API at:", url);
+
+            const response = await fetch(url, {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json",
+                },
+                credentials: "include",
+                body: JSON.stringify({
+                    email: "test@example.com",
+                    password: "wrongpassword",
+                }),
+            });
+
             const data = await response.json();
             console.log("Login test response:", data);
-            setHealthCheck({ loginTest: data, status: response.status });
+
+            setHealthCheck({
+                loginTest: data,
+                status: response.status,
+                url: url,
+            });
         } catch (err) {
+            console.error("Login test error:", err);
             setError(err instanceof Error ? err.message : "Unknown error");
         }
     };
@@ -93,6 +134,22 @@ export default function DiagnosticsPage() {
                         >
                             Test Login Endpoint
                         </button>
+                        <div className="mt-4 text-sm text-gray-600">
+                            <p>
+                                <strong>Current Test URL:</strong>{" "}
+                                {typeof window !== "undefined"
+                                    ? window.location.origin
+                                    : "Loading..."}
+                                /api
+                            </p>
+                            <p>
+                                <strong>Browser:</strong>{" "}
+                                {typeof window !== "undefined"
+                                    ? navigator.userAgent.substring(0, 100) +
+                                      "..."
+                                    : "Loading..."}
+                            </p>
+                        </div>
                     </div>
                 </div>
 
