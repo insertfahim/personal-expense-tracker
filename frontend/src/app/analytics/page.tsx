@@ -1,19 +1,35 @@
 "use client";
 
-import React from "react";
+import React, { useMemo } from "react";
 import { useAuth } from "@/context/AuthContext";
 import Link from "next/link";
 import {
     BarChart3,
     PieChart,
     TrendingUp,
-    Calendar,
     DollarSign,
     Target,
     ArrowRight,
     CheckCircle,
     Star,
+    RefreshCw,
+    Calendar,
 } from "lucide-react";
+import {
+    PieChart as RechartsPieChart,
+    Pie,
+    Cell,
+    ResponsiveContainer,
+    BarChart,
+    Bar,
+    XAxis,
+    YAxis,
+    CartesianGrid,
+    Tooltip,
+    Legend,
+} from "recharts";
+import { useExpenseStats } from "@/hooks/useExpenses";
+import { format } from "date-fns";
 
 const AnalyticsPage: React.FC = () => {
     const { isAuthenticated } = useAuth();
@@ -158,77 +174,470 @@ const AnalyticsFeaturePage: React.FC = () => {
 };
 
 const AnalyticsDashboard: React.FC = () => {
+    const { stats, isLoading, error, refresh } = useExpenseStats();
+
+    // Color palette for charts
+    const colors = useMemo(
+        () => [
+            "#3B82F6", // Blue
+            "#10B981", // Green
+            "#F59E0B", // Yellow
+            "#EF4444", // Red
+            "#8B5CF6", // Purple
+            "#06B6D4", // Cyan
+            "#F97316", // Orange
+        ],
+        []
+    );
+
+    // Prepare data for category pie chart
+    const categoryData = useMemo(() => {
+        return (
+            stats?.categoryStats?.map((item, index) => ({
+                name: item._id,
+                value: item.total,
+                count: item.count,
+                color: colors[index % colors.length],
+            })) || []
+        );
+    }, [stats?.categoryStats, colors]);
+
+    // Prepare monthly trend data
+    const monthlyTrendData = useMemo(() => {
+        return (
+            stats?.monthlyStats?.map((item) => ({
+                month: format(new Date(2024, item._id - 1), "MMM"),
+                amount: item.total,
+                count: item.count,
+            })) || []
+        );
+    }, [stats?.monthlyStats]);
+
+    // Find highest spending category
+    const highestSpendingCategory = useMemo(() => {
+        if (!categoryData.length) return null;
+        return categoryData.reduce((prev, current) =>
+            prev.value > current.value ? prev : current
+        );
+    }, [categoryData]);
+
+    // Calculate spending trend (comparison with previous period)
+    const spendingTrend = useMemo(() => {
+        const currentMonth = new Date().getMonth();
+        const currentMonthData = monthlyTrendData.find(
+            (item) => format(new Date(2024, currentMonth), "MMM") === item.month
+        );
+        const previousMonthData = monthlyTrendData.find(
+            (item) =>
+                format(new Date(2024, currentMonth - 1), "MMM") === item.month
+        );
+
+        if (!currentMonthData || !previousMonthData) return null;
+
+        const change =
+            ((currentMonthData.amount - previousMonthData.amount) /
+                previousMonthData.amount) *
+            100;
+        return {
+            change: change.toFixed(1),
+            isIncrease: change > 0,
+            current: currentMonthData.amount,
+            previous: previousMonthData.amount,
+        };
+    }, [monthlyTrendData]);
+
+    if (isLoading) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="animate-spin rounded-full h-32 w-32 border-b-2 border-blue-600 mx-auto mb-4"></div>
+                    <p className="text-gray-600">Loading analytics...</p>
+                </div>
+            </div>
+        );
+    }
+
+    if (error) {
+        return (
+            <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+                <div className="text-center">
+                    <div className="bg-red-100 border border-red-400 text-red-700 px-6 py-4 rounded-lg mb-4">
+                        <p className="font-semibold">Error loading analytics</p>
+                        <p className="text-sm">{error}</p>
+                    </div>
+                    <button
+                        onClick={refresh}
+                        className="bg-blue-600 text-white px-6 py-2 rounded-lg font-medium hover:bg-blue-700 transition-colors inline-flex items-center"
+                    >
+                        <RefreshCw className="h-4 w-4 mr-2" />
+                        Try Again
+                    </button>
+                </div>
+            </div>
+        );
+    }
+
     return (
         <div className="min-h-screen bg-gray-50">
             <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+                {/* Header */}
                 <div className="mb-8">
-                    <h1 className="text-3xl font-bold text-gray-900 mb-2">
-                        Analytics Dashboard
-                    </h1>
-                    <p className="text-gray-600">
-                        Track your spending patterns and financial insights
-                    </p>
+                    <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+                        <div>
+                            <h1 className="text-3xl font-bold text-gray-900 mb-2">
+                                Analytics Dashboard
+                            </h1>
+                            <p className="text-gray-600">
+                                Insights into your spending patterns and
+                                financial habits
+                            </p>
+                        </div>
+
+                        {/* Controls */}
+                        <div className="flex flex-col sm:flex-row gap-3">
+                            <button
+                                onClick={refresh}
+                                className="px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors inline-flex items-center"
+                            >
+                                <RefreshCw className="h-4 w-4 mr-2" />
+                                Refresh
+                            </button>
+                        </div>
+                    </div>
                 </div>
 
-                {/* Coming Soon Message */}
-                <div className="bg-white rounded-lg shadow-lg p-12 text-center">
-                    <div className="flex justify-center mb-6">
-                        <BarChart3 className="h-20 w-20 text-blue-600" />
-                    </div>
-                    <h2 className="text-2xl font-semibold text-gray-900 mb-4">
-                        Analytics Dashboard Coming Soon!
-                    </h2>
-                    <p className="text-gray-600 mb-8 max-w-2xl mx-auto">
-                        We&apos;re working hard to bring you comprehensive
-                        analytics and insights about your expenses. This feature
-                        will include interactive charts, spending trends,
-                        category breakdowns, and much more.
-                    </p>
-
-                    <div className="grid md:grid-cols-3 gap-6 mb-8">
-                        <div className="bg-blue-50 p-6 rounded-lg">
-                            <PieChart className="h-8 w-8 text-blue-600 mx-auto mb-3" />
-                            <h3 className="font-semibold text-gray-900 mb-2">
-                                Category Breakdown
-                            </h3>
-                            <p className="text-sm text-gray-600">
-                                Visual pie charts of your spending by category
-                            </p>
+                {/* Summary Cards */}
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
+                    <div className="bg-white p-6 rounded-lg shadow-lg border">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-gray-600 mb-1">
+                                    Total Spent
+                                </p>
+                                <p className="text-2xl font-bold text-gray-900">
+                                    $
+                                    {stats?.totalStats?.totalAmount?.toFixed(
+                                        2
+                                    ) || "0.00"}
+                                </p>
+                            </div>
+                            <div className="bg-blue-100 p-3 rounded-lg">
+                                <DollarSign className="h-6 w-6 text-blue-600" />
+                            </div>
                         </div>
-                        <div className="bg-green-50 p-6 rounded-lg">
-                            <TrendingUp className="h-8 w-8 text-green-600 mx-auto mb-3" />
-                            <h3 className="font-semibold text-gray-900 mb-2">
-                                Spending Trends
-                            </h3>
-                            <p className="text-sm text-gray-600">
-                                Track your spending patterns over time
-                            </p>
-                        </div>
-                        <div className="bg-purple-50 p-6 rounded-lg">
-                            <Target className="h-8 w-8 text-purple-600 mx-auto mb-3" />
-                            <h3 className="font-semibold text-gray-900 mb-2">
-                                Budget Goals
-                            </h3>
-                            <p className="text-sm text-gray-600">
-                                Set and track your financial goals
-                            </p>
-                        </div>
+                        {spendingTrend && (
+                            <div className="mt-3 flex items-center text-sm">
+                                <span
+                                    className={`flex items-center ${
+                                        spendingTrend.isIncrease
+                                            ? "text-red-600"
+                                            : "text-green-600"
+                                    }`}
+                                >
+                                    <TrendingUp
+                                        className={`h-4 w-4 mr-1 ${
+                                            spendingTrend.isIncrease
+                                                ? "rotate-0"
+                                                : "rotate-180"
+                                        }`}
+                                    />
+                                    {Math.abs(parseFloat(spendingTrend.change))}
+                                    % vs last month
+                                </span>
+                            </div>
+                        )}
                     </div>
 
-                    <div className="flex flex-col sm:flex-row gap-4 justify-center">
-                        <Link
-                            href="/expenses"
-                            className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors"
-                        >
-                            View Your Expenses
-                        </Link>
-                        <Link
-                            href="/add-expense"
-                            className="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors"
-                        >
-                            Add New Expense
-                        </Link>
+                    <div className="bg-white p-6 rounded-lg shadow-lg border">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-gray-600 mb-1">
+                                    Total Expenses
+                                </p>
+                                <p className="text-2xl font-bold text-gray-900">
+                                    {stats?.totalStats?.totalExpenses || 0}
+                                </p>
+                            </div>
+                            <div className="bg-green-100 p-3 rounded-lg">
+                                <BarChart3 className="h-6 w-6 text-green-600" />
+                            </div>
+                        </div>
                     </div>
+
+                    <div className="bg-white p-6 rounded-lg shadow-lg border">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-gray-600 mb-1">
+                                    Average Amount
+                                </p>
+                                <p className="text-2xl font-bold text-gray-900">
+                                    $
+                                    {stats?.totalStats?.avgAmount?.toFixed(2) ||
+                                        "0.00"}
+                                </p>
+                            </div>
+                            <div className="bg-yellow-100 p-3 rounded-lg">
+                                <Target className="h-6 w-6 text-yellow-600" />
+                            </div>
+                        </div>
+                    </div>
+
+                    <div className="bg-white p-6 rounded-lg shadow-lg border">
+                        <div className="flex items-center justify-between">
+                            <div>
+                                <p className="text-sm font-medium text-gray-600 mb-1">
+                                    Top Category
+                                </p>
+                                <p className="text-lg font-bold text-gray-900">
+                                    {highestSpendingCategory?.name || "N/A"}
+                                </p>
+                                {highestSpendingCategory && (
+                                    <p className="text-sm text-gray-600">
+                                        $
+                                        {highestSpendingCategory.value.toFixed(
+                                            2
+                                        )}
+                                    </p>
+                                )}
+                            </div>
+                            <div className="bg-purple-100 p-3 rounded-lg">
+                                <PieChart className="h-6 w-6 text-purple-600" />
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                {/* Charts Grid */}
+                <div className="grid grid-cols-1 lg:grid-cols-2 gap-8 mb-8">
+                    {/* Category Distribution Pie Chart */}
+                    <div className="bg-white p-6 rounded-lg shadow-lg border">
+                        <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                            Spending by Category
+                        </h2>
+                        {categoryData.length > 0 ? (
+                            <ResponsiveContainer width="100%" height={300}>
+                                <RechartsPieChart>
+                                    <Pie
+                                        data={categoryData}
+                                        cx="50%"
+                                        cy="50%"
+                                        outerRadius={100}
+                                        dataKey="value"
+                                    >
+                                        {categoryData.map((entry, index) => (
+                                            <Cell
+                                                key={`cell-${index}`}
+                                                fill={entry.color}
+                                            />
+                                        ))}
+                                    </Pie>
+                                    <Tooltip
+                                        formatter={(value: number) => [
+                                            `$${value.toFixed(2)}`,
+                                            "Amount",
+                                        ]}
+                                        labelFormatter={(label) =>
+                                            `Category: ${label}`
+                                        }
+                                    />
+                                    <Legend />
+                                </RechartsPieChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+                                <PieChart className="h-16 w-16 mb-4 text-gray-300" />
+                                <p className="text-lg font-medium mb-2">
+                                    No data available
+                                </p>
+                                <p className="text-sm text-center">
+                                    Add some expenses to see your spending
+                                    breakdown by category
+                                </p>
+                            </div>
+                        )}
+                    </div>
+
+                    {/* Monthly Trend Bar Chart */}
+                    <div className="bg-white p-6 rounded-lg shadow-lg border">
+                        <h2 className="text-xl font-semibold text-gray-900 mb-6">
+                            Monthly Spending Trend
+                        </h2>
+                        {monthlyTrendData.length > 0 ? (
+                            <ResponsiveContainer width="100%" height={300}>
+                                <BarChart data={monthlyTrendData}>
+                                    <CartesianGrid strokeDasharray="3 3" />
+                                    <XAxis dataKey="month" />
+                                    <YAxis />
+                                    <Tooltip
+                                        formatter={(value: number) => [
+                                            `$${value.toFixed(2)}`,
+                                            "Amount",
+                                        ]}
+                                        labelFormatter={(label) =>
+                                            `Month: ${label}`
+                                        }
+                                    />
+                                    <Legend />
+                                    <Bar
+                                        dataKey="amount"
+                                        fill="#3B82F6"
+                                        radius={[4, 4, 0, 0]}
+                                    />
+                                </BarChart>
+                            </ResponsiveContainer>
+                        ) : (
+                            <div className="flex flex-col items-center justify-center h-64 text-gray-500">
+                                <BarChart3 className="h-16 w-16 mb-4 text-gray-300" />
+                                <p className="text-lg font-medium mb-2">
+                                    No trend data
+                                </p>
+                                <p className="text-sm text-center">
+                                    Add expenses over multiple months to see
+                                    trends
+                                </p>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Category Breakdown Table */}
+                <div className="bg-white rounded-lg shadow-lg border">
+                    <div className="px-6 py-4 border-b border-gray-200">
+                        <h2 className="text-xl font-semibold text-gray-900">
+                            Category Breakdown
+                        </h2>
+                    </div>
+                    <div className="overflow-x-auto">
+                        {categoryData.length > 0 ? (
+                            <table className="min-w-full divide-y divide-gray-200">
+                                <thead className="bg-gray-50">
+                                    <tr>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Category
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Total Amount
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Number of Expenses
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Average
+                                        </th>
+                                        <th className="px-6 py-3 text-left text-xs font-medium text-gray-500 uppercase tracking-wider">
+                                            Percentage
+                                        </th>
+                                    </tr>
+                                </thead>
+                                <tbody className="bg-white divide-y divide-gray-200">
+                                    {categoryData
+                                        .sort((a, b) => b.value - a.value)
+                                        .map((category) => {
+                                            const totalAmount =
+                                                stats?.totalStats
+                                                    ?.totalAmount || 1;
+                                            const percentage =
+                                                (category.value / totalAmount) *
+                                                100;
+                                            const average =
+                                                category.value / category.count;
+
+                                            return (
+                                                <tr
+                                                    key={category.name}
+                                                    className="hover:bg-gray-50"
+                                                >
+                                                    <td className="px-6 py-4 whitespace-nowrap">
+                                                        <div className="flex items-center">
+                                                            <div
+                                                                className="w-4 h-4 rounded-full mr-3"
+                                                                style={{
+                                                                    backgroundColor:
+                                                                        category.color,
+                                                                }}
+                                                            ></div>
+                                                            <div className="text-sm font-medium text-gray-900">
+                                                                {category.name}
+                                                            </div>
+                                                        </div>
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm font-semibold text-gray-900">
+                                                        $
+                                                        {category.value.toFixed(
+                                                            2
+                                                        )}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        {category.count}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        ${average.toFixed(2)}
+                                                    </td>
+                                                    <td className="px-6 py-4 whitespace-nowrap text-sm text-gray-500">
+                                                        <div className="flex items-center">
+                                                            <div className="flex-1 bg-gray-200 rounded-full h-2 mr-3">
+                                                                <div
+                                                                    className="h-2 rounded-full"
+                                                                    style={{
+                                                                        width: `${percentage}%`,
+                                                                        backgroundColor:
+                                                                            category.color,
+                                                                    }}
+                                                                ></div>
+                                                            </div>
+                                                            <span className="font-medium">
+                                                                {percentage.toFixed(
+                                                                    1
+                                                                )}
+                                                                %
+                                                            </span>
+                                                        </div>
+                                                    </td>
+                                                </tr>
+                                            );
+                                        })}
+                                </tbody>
+                            </table>
+                        ) : (
+                            <div className="px-6 py-12 text-center">
+                                <div className="flex flex-col items-center">
+                                    <BarChart3 className="h-16 w-16 text-gray-300 mb-4" />
+                                    <p className="text-lg font-medium text-gray-900 mb-2">
+                                        No expense data
+                                    </p>
+                                    <p className="text-gray-500 mb-6">
+                                        Start adding expenses to see detailed
+                                        analytics
+                                    </p>
+                                    <Link
+                                        href="/add-expense"
+                                        className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors inline-flex items-center"
+                                    >
+                                        <DollarSign className="h-5 w-5 mr-2" />
+                                        Add Your First Expense
+                                    </Link>
+                                </div>
+                            </div>
+                        )}
+                    </div>
+                </div>
+
+                {/* Quick Actions */}
+                <div className="mt-8 flex flex-col sm:flex-row gap-4 justify-center">
+                    <Link
+                        href="/expenses"
+                        className="bg-blue-600 text-white px-6 py-3 rounded-lg font-medium hover:bg-blue-700 transition-colors inline-flex items-center justify-center"
+                    >
+                        <BarChart3 className="h-5 w-5 mr-2" />
+                        View All Expenses
+                    </Link>
+                    <Link
+                        href="/add-expense"
+                        className="border border-blue-600 text-blue-600 px-6 py-3 rounded-lg font-medium hover:bg-blue-50 transition-colors inline-flex items-center justify-center"
+                    >
+                        <DollarSign className="h-5 w-5 mr-2" />
+                        Add New Expense
+                    </Link>
                 </div>
             </div>
         </div>

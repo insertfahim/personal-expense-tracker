@@ -82,9 +82,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     }, []);
 
     const login = async (data: LoginFormData): Promise<boolean> => {
+        console.log("AuthContext login called with:", data);
         try {
             setIsLoading(true);
+            console.log("Making API call to login...");
             const response = await authAPI.login(data);
+            console.log("API response:", response);
 
             if (response.success && response.data) {
                 const { user, token } = response.data;
@@ -92,13 +95,17 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 if (typeof window !== "undefined") {
                     localStorage.setItem("token", token);
                     localStorage.setItem("user", JSON.stringify(user));
+                    console.log("User data saved to localStorage");
                 }
                 setUser(user);
 
                 console.log("Login successful!");
                 return true;
             } else {
-                console.error(response.message || "Login failed");
+                console.error(
+                    "Login failed:",
+                    response.message || "Unknown error"
+                );
                 return false;
             }
         } catch (error: unknown) {
@@ -110,7 +117,7 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 errorMessage = error.message;
             }
 
-            console.error(errorMessage);
+            console.error("Error message:", errorMessage);
             return false;
         } finally {
             setIsLoading(false);

@@ -51,11 +51,14 @@ Personal Expense Tracker is a comprehensive, full-stack web application designed
 
 ### **📈 Analytics & Insights**
 
--   [x] Real-time expense statistics
--   [x] Monthly and yearly spending summaries
--   [x] Category-wise expense breakdown
--   [x] Interactive charts with Recharts
--   [x] Spending trends visualization
+-   [x] **Comprehensive Analytics Dashboard** - Interactive charts and detailed insights
+-   [x] **Category Breakdown** - Pie charts showing spending distribution by category
+-   [x] **Monthly Trends** - Bar charts displaying spending patterns over time
+-   [x] **Key Metrics** - Total spent, expense count, averages, and top categories
+-   [x] **Smart Insights** - Month-over-month comparisons and spending trends
+-   [x] **Detailed Tables** - Category-wise breakdown with percentages and progress bars
+-   [x] **Real-time Updates** - Statistics update automatically when expenses change
+-   [x] **Responsive Charts** - Charts adapt to all screen sizes and devices
 
 ### **🎨 User Experience**
 
@@ -260,6 +263,53 @@ Import the API collection from `/docs/api-collection.json`
 
 ---
 
+## 📊 **Analytics Dashboard**
+
+### **Overview**
+
+The analytics dashboard provides comprehensive insights into your spending patterns with interactive charts and detailed statistics.
+
+### **Key Features**
+
+-   **📈 Interactive Charts**: Pie charts for category distribution, bar charts for monthly trends
+-   **📋 Summary Metrics**: Total spent, expense count, averages, and top categories
+-   **📊 Detailed Analysis**: Category breakdown with percentages and progress indicators
+-   **🔄 Real-time Updates**: Statistics refresh automatically when expenses change
+-   **📱 Responsive Design**: Optimized for all device sizes
+
+### **Dashboard Sections**
+
+#### Summary Cards
+
+-   **Total Spent** - Your complete expense amount with trend indicators
+-   **Total Expenses** - Number of expense entries
+-   **Average Amount** - Average spending per expense
+-   **Top Category** - Highest spending category
+
+#### Interactive Visualizations
+
+-   **Category Pie Chart** - Visual spending distribution across categories
+-   **Monthly Bar Chart** - Spending trends over time
+-   **Progress Tables** - Detailed breakdowns with percentages
+
+### **Technical Implementation**
+
+-   **Charts**: Built with Recharts library for responsive, interactive visualizations
+-   **Data Processing**: Real-time statistics calculated from MongoDB aggregations
+-   **Performance**: Optimized with React useMemo for efficient re-renders
+-   **Error Handling**: Graceful fallbacks and loading states
+
+### **Getting Started with Analytics**
+
+1. Add some expenses through the expense form
+2. Navigate to `/analytics` to view your dashboard
+3. Explore interactive charts and detailed statistics
+4. Use insights to make informed financial decisions
+
+For detailed analytics documentation, see [ANALYTICS_README.md](./ANALYTICS_README.md)
+
+---
+
 ## 🤝 **Contributing**
 
 We welcome contributions! Please follow these steps:
@@ -431,16 +481,17 @@ npm run type-check
 -   [x] User authentication
 -   [x] CRUD operations for expenses
 -   [x] Basic analytics
+-   [x] Advanced analytics dashboard
 -   [x] Responsive design
 -   [x] Vercel deployment setup
 
 ### **Phase 2: Enhanced Features** 🚧
 
--   [ ] Advanced analytics dashboard
 -   [ ] Data export functionality
 -   [ ] Budget planning and tracking
 -   [ ] Receipt image upload
 -   [ ] Multi-currency support
+-   [ ] Date range filtering for analytics
 
 ### **Phase 3: Advanced Features** 📋
 

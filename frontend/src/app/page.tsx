@@ -3,10 +3,14 @@
 import React from "react";
 import Link from "next/link";
 import { useAuth } from "@/context/AuthContext";
+import { useExpenses } from "@/hooks/useExpenses";
 import { BarChart3, PieChart, CreditCard, DollarSign } from "lucide-react";
 
 export default function Dashboard() {
     const { isAuthenticated } = useAuth();
+    const { expenses, totalAmount, isLoading } = useExpenses({
+        autoFetch: isAuthenticated,
+    });
 
     if (!isAuthenticated) {
         return (
@@ -100,7 +104,9 @@ export default function Dashboard() {
                                 Total Expenses
                             </p>
                             <p className="text-2xl font-bold text-gray-900">
-                                $0.00
+                                {isLoading
+                                    ? "Loading..."
+                                    : `$${totalAmount.toFixed(2)}`}
                             </p>
                         </div>
                     </div>
@@ -112,7 +118,7 @@ export default function Dashboard() {
                                 Transactions
                             </p>
                             <p className="text-2xl font-bold text-gray-900">
-                                0
+                                {isLoading ? "Loading..." : expenses.length}
                             </p>
                         </div>
                     </div>
@@ -141,7 +147,13 @@ export default function Dashboard() {
                 </div>
 
                 <div className="text-center text-gray-600">
-                    <p>Start by adding your first expense!</p>
+                    {isLoading ? (
+                        <p>Loading your expenses...</p>
+                    ) : expenses.length === 0 ? (
+                        <p>Start by adding your first expense!</p>
+                    ) : (
+                        <p>Keep tracking your expenses to stay on budget!</p>
+                    )}
                 </div>
             </div>
         </div>

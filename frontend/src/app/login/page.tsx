@@ -24,9 +24,18 @@ export default function LoginPage() {
     });
 
     const onSubmit = async (data: LoginFormData) => {
-        const success = await login(data);
-        if (success) {
-            router.push("/");
+        console.log("Form submitted with data:", data);
+        try {
+            const success = await login(data);
+            console.log("Login success:", success);
+            if (success) {
+                console.log("Redirecting to home page...");
+                router.push("/");
+            } else {
+                console.log("Login failed");
+            }
+        } catch (error) {
+            console.error("Error during login:", error);
         }
     };
 
