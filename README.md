@@ -10,7 +10,7 @@
 
 **A modern, full-stack MERN application for tracking personal expenses with real-time analytics and beautiful UI**
 
-[🚀 Live Demo](https://your-app-url.vercel.app) • [📖 Documentation](#-documentation) • [🐛 Report Bug](https://github.com/insertfahim/personal-expense-tracker/issues) • [💡 Request Feature](https://github.com/insertfahim/personal-expense-tracker/issues)
+[🚀 Live Demo](https://expense-tracker-by-fahim.vercel.app/) • [📖 Documentation](#-documentation) • [🐛 Report Bug](https://github.com/insertfahim/personal-expense-tracker/issues) • [💡 Request Feature](https://github.com/insertfahim/personal-expense-tracker/issues)
 
 </div>
 
@@ -480,12 +480,12 @@ npm run type-check
     MONGODB_URI=your-mongodb-atlas-connection-string
     JWT_SECRET=your-super-secure-secret
     NODE_ENV=production
-    FRONTEND_URL=https://your-app-name.vercel.app
+    FRONTEND_URL=https://expense-tracker-by-fahim.vercel.app
     ```
 
 4. **Deploy!**
     - Click "Deploy" and your app will be live! 🎉
-    - Your app will be available at `https://your-app-name.vercel.app`
+    - Your app will be available at `https://expense-tracker-by-fahim.vercel.app`
 
 ### **Alternative Deployment Options**
 
@@ -543,7 +543,7 @@ This project is licensed under the **MIT License** - see the [LICENSE](LICENSE) 
 
 ### **🚀 Ready to start tracking your expenses?**
 
-[**Live Demo**](https://your-app-url.vercel.app) • [**Deploy Your Own**](https://vercel.com/import/project?template=https://github.com/insertfahim/personal-expense-tracker)
+[**Live Demo**](https://expense-tracker-by-fahim.vercel.app/) • [**Deploy Your Own**](https://vercel.com/import/project?template=https://github.com/insertfahim/personal-expense-tracker)
 
 ---
 
