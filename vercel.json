@@ -3,21 +3,10 @@
     "builds": [
         {
             "src": "frontend/package.json",
-            "use": "@vercel/next",
-            "config": {
-                "distDir": ".next"
-            }
-        },
-        {
-            "src": "backend/src/index.js",
-            "use": "@vercel/node"
+            "use": "@vercel/next"
         }
     ],
     "routes": [
-        {
-            "src": "/api/(.*)",
-            "dest": "backend/src/index.js"
-        },
         {
             "src": "/(.*)",
             "dest": "frontend/$1"
@@ -28,7 +17,5 @@
         "JWT_SECRET": "your-super-secure-jwt-key-change-this-in-production-please-change-this",
         "FRONTEND_URL": "https://expense-tracker-by-fahim.vercel.app",
         "NODE_ENV": "production"
-    },
-    "installCommand": "cd frontend && npm ci",
-    "buildCommand": "cd frontend && npm run build"
+    }
 }

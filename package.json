@@ -8,9 +8,5 @@
         "start": "cd frontend && npm run start",
         "backend:dev": "cd backend && npm run dev",
         "backend:start": "cd backend && npm run start"
-    },
-    "workspaces": [
-        "frontend",
-        "backend"
-    ]
+    }
 }
