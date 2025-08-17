@@ -37,6 +37,12 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     useEffect(() => {
         const initAuth = async () => {
             try {
+                // Check if we're in the browser
+                if (typeof window === "undefined") {
+                    setIsLoading(false);
+                    return;
+                }
+
                 const token = localStorage.getItem("token");
                 const savedUser = localStorage.getItem("user");
 
@@ -62,8 +68,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
                 }
             } catch (error) {
                 console.error("Auth initialization error:", error);
-                localStorage.removeItem("token");
-                localStorage.removeItem("user");
+                if (typeof window !== "undefined") {
+                    localStorage.removeItem("token");
+                    localStorage.removeItem("user");
+                }
                 setUser(null);
             } finally {
                 setIsLoading(false);
@@ -81,8 +89,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             if (response.success && response.data) {
                 const { user, token } = response.data;
 
-                localStorage.setItem("token", token);
-                localStorage.setItem("user", JSON.stringify(user));
+                if (typeof window !== "undefined") {
+                    localStorage.setItem("token", token);
+                    localStorage.setItem("user", JSON.stringify(user));
+                }
                 setUser(user);
 
                 toast.success("Login successful!");
@@ -110,8 +120,10 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
             if (response.success && response.data) {
                 const { user, token } = response.data;
 
-                localStorage.setItem("token", token);
-                localStorage.setItem("user", JSON.stringify(user));
+                if (typeof window !== "undefined") {
+                    localStorage.setItem("token", token);
+                    localStorage.setItem("user", JSON.stringify(user));
+                }
                 setUser(user);
 
                 toast.success("Registration successful!");
@@ -132,14 +144,18 @@ export const AuthProvider: React.FC<AuthProviderProps> = ({ children }) => {
     };
 
     const logout = () => {
-        localStorage.removeItem("token");
-        localStorage.removeItem("user");
+        if (typeof window !== "undefined") {
+            localStorage.removeItem("token");
+            localStorage.removeItem("user");
+        }
         setUser(null);
         toast.success("Logged out successfully");
     };
 
     const refreshUser = async () => {
         try {
+            if (typeof window === "undefined") return;
+
             const token = localStorage.getItem("token");
             if (!token) return;
 
