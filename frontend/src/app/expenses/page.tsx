@@ -35,10 +35,14 @@ const categories: ExpenseCategory[] = [
 export default function ExpensesPage() {
     const [selectedCategory, setSelectedCategory] = useState<string>("all");
     const [searchTerm, setSearchTerm] = useState("");
+    const [startDate, setStartDate] = useState<string>("");
+    const [endDate, setEndDate] = useState<string>("");
 
     const { expenses, totalAmount, pagination, isLoading, deleteExpense } =
         useExpenses({
             category: selectedCategory === "all" ? undefined : selectedCategory,
+            startDate: startDate || undefined,
+            endDate: endDate || undefined,
             limit: 20,
         });
 
@@ -51,6 +55,22 @@ export default function ExpensesPage() {
         if (confirm("Are you sure you want to delete this expense?")) {
             await deleteExpense(id);
         }
+    };
+
+    const setDateRange = (days: number) => {
+        const today = new Date();
+        const startDate = new Date();
+        startDate.setDate(today.getDate() - days);
+
+        setStartDate(startDate.toISOString().split("T")[0]);
+        setEndDate(today.toISOString().split("T")[0]);
+    };
+
+    const setCurrentMonth = () => {
+        const today = new Date();
+        const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1);
+        setStartDate(startOfMonth.toISOString().split("T")[0]);
+        setEndDate(today.toISOString().split("T")[0]);
     };
 
     if (isLoading && expenses.length === 0) {
@@ -152,40 +172,178 @@ export default function ExpensesPage() {
 
                     {/* Filters */}
                     <div className="bg-white p-6 rounded-lg shadow-md mb-8">
-                        <div className="flex flex-col lg:flex-row lg:items-center gap-4">
-                            {/* Search */}
-                            <div className="flex-1">
-                                <div className="relative">
-                                    <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
-                                    <input
-                                        type="text"
-                                        placeholder="Search expenses..."
-                                        className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                                        value={searchTerm}
+                        <div className="flex flex-col space-y-4">
+                            {/* First Row: Search and Category */}
+                            <div className="flex flex-col lg:flex-row lg:items-center gap-4">
+                                {/* Search */}
+                                <div className="flex-1">
+                                    <div className="relative">
+                                        <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 h-5 w-5 text-gray-400" />
+                                        <input
+                                            type="text"
+                                            placeholder="Search expenses..."
+                                            className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                            value={searchTerm}
+                                            onChange={(e) =>
+                                                setSearchTerm(e.target.value)
+                                            }
+                                        />
+                                    </div>
+                                </div>
+
+                                {/* Category Filter */}
+                                <div className="lg:w-64">
+                                    <select
+                                        value={selectedCategory}
                                         onChange={(e) =>
-                                            setSearchTerm(e.target.value)
+                                            setSelectedCategory(e.target.value)
                                         }
-                                    />
+                                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
+                                    >
+                                        <option value="all">
+                                            All Categories
+                                        </option>
+                                        {categories.map((category) => (
+                                            <option
+                                                key={category}
+                                                value={category}
+                                            >
+                                                {category}
+                                            </option>
+                                        ))}
+                                    </select>
                                 </div>
                             </div>
 
-                            {/* Category Filter */}
-                            <div className="lg:w-64">
-                                <select
-                                    value={selectedCategory}
-                                    onChange={(e) =>
-                                        setSelectedCategory(e.target.value)
-                                    }
-                                    className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500"
-                                >
-                                    <option value="all">All Categories</option>
-                                    {categories.map((category) => (
-                                        <option key={category} value={category}>
-                                            {category}
-                                        </option>
-                                    ))}
-                                </select>
+                            {/* Second Row: Date Range Filters */}
+                            <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                                <div className="flex items-center gap-2">
+                                    <Calendar className="h-5 w-5 text-gray-400" />
+                                    <span className="text-sm font-medium text-gray-700">
+                                        Date Range:
+                                    </span>
+                                </div>
+
+                                {/* Start Date */}
+                                <div className="flex items-center gap-2">
+                                    <label
+                                        htmlFor="startDate"
+                                        className="text-sm text-gray-600"
+                                    >
+                                        From:
+                                    </label>
+                                    <input
+                                        id="startDate"
+                                        type="date"
+                                        value={startDate}
+                                        onChange={(e) =>
+                                            setStartDate(e.target.value)
+                                        }
+                                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                    />
+                                </div>
+
+                                {/* End Date */}
+                                <div className="flex items-center gap-2">
+                                    <label
+                                        htmlFor="endDate"
+                                        className="text-sm text-gray-600"
+                                    >
+                                        To:
+                                    </label>
+                                    <input
+                                        id="endDate"
+                                        type="date"
+                                        value={endDate}
+                                        onChange={(e) =>
+                                            setEndDate(e.target.value)
+                                        }
+                                        className="px-3 py-2 border border-gray-300 rounded-lg focus:ring-blue-500 focus:border-blue-500 text-sm"
+                                    />
+                                </div>
+
+                                {/* Clear Date Filters Button */}
+                                {(startDate || endDate) && (
+                                    <button
+                                        onClick={() => {
+                                            setStartDate("");
+                                            setEndDate("");
+                                        }}
+                                        className="px-3 py-2 text-sm text-blue-600 hover:text-blue-800 border border-blue-300 rounded-lg hover:bg-blue-50 transition-colors"
+                                    >
+                                        Clear Dates
+                                    </button>
+                                )}
                             </div>
+
+                            {/* Quick Date Presets */}
+                            <div className="flex flex-wrap items-center gap-2">
+                                <span className="text-sm text-gray-600">
+                                    Quick select:
+                                </span>
+                                <button
+                                    onClick={() => setDateRange(7)}
+                                    className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors"
+                                >
+                                    Last 7 days
+                                </button>
+                                <button
+                                    onClick={() => setDateRange(30)}
+                                    className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors"
+                                >
+                                    Last 30 days
+                                </button>
+                                <button
+                                    onClick={() => setCurrentMonth()}
+                                    className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors"
+                                >
+                                    This month
+                                </button>
+                                <button
+                                    onClick={() => setDateRange(90)}
+                                    className="px-3 py-1 text-xs bg-gray-100 hover:bg-gray-200 text-gray-700 rounded-full transition-colors"
+                                >
+                                    Last 3 months
+                                </button>
+                            </div>
+
+                            {/* Filter Summary */}
+                            {(selectedCategory !== "all" ||
+                                startDate ||
+                                endDate ||
+                                searchTerm) && (
+                                <div className="flex flex-wrap items-center gap-2 pt-2 border-t border-gray-200">
+                                    <span className="text-sm text-gray-600">
+                                        Active filters:
+                                    </span>
+                                    {selectedCategory !== "all" && (
+                                        <span className="px-2 py-1 bg-blue-100 text-blue-800 rounded-full text-xs">
+                                            Category: {selectedCategory}
+                                        </span>
+                                    )}
+                                    {startDate && (
+                                        <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                                            From:{" "}
+                                            {new Date(
+                                                startDate
+                                            ).toLocaleDateString()}
+                                        </span>
+                                    )}
+                                    {endDate && (
+                                        <span className="px-2 py-1 bg-green-100 text-green-800 rounded-full text-xs">
+                                            To:{" "}
+                                            {new Date(
+                                                endDate
+                                            ).toLocaleDateString()}
+                                        </span>
+                                    )}
+                                    {searchTerm && (
+                                        <span className="px-2 py-1 bg-purple-100 text-purple-800 rounded-full text-xs">
+                                            Search: &quot;{searchTerm}&quot;
+                                        </span>
+                                    )}
+                                </div>
+                            )}
                         </div>
                     </div>
 
@@ -199,14 +357,16 @@ export default function ExpensesPage() {
                             <p className="text-gray-600 mb-6">
                                 {expenses.length === 0
                                     ? "Start tracking your expenses by adding your first expense."
-                                    : "Try adjusting your search or filter criteria."}
+                                    : "No expenses match your current filters. Try adjusting your search term, category, or date range."}
                             </p>
                             <Link
                                 href="/add-expense"
                                 className="inline-flex items-center px-4 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700 transition-colors"
                             >
                                 <PlusCircle className="h-5 w-5 mr-2" />
-                                Add Your First Expense
+                                {expenses.length === 0
+                                    ? "Add Your First Expense"
+                                    : "Add New Expense"}
                             </Link>
                         </div>
                     ) : (

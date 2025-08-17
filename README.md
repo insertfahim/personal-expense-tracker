@@ -45,8 +45,13 @@ Personal Expense Tracker is a comprehensive, full-stack web application designed
 
 -   [x] Create, read, update, and delete expenses
 -   [x] Categorize expenses (Food, Transport, Shopping, Entertainment, Healthcare, Bills, Others)
--   [x] Search expenses by title or description
--   [x] Filter by category and date range
+-   [x] **Advanced Search & Filtering**:
+    -   [x] Search expenses by title or description
+    -   [x] Filter by category with dropdown selection
+    -   [x] **Date range filtering** with custom start/end date selection
+    -   [x] **Quick date presets**: Last 7 days, Last 30 days, This month, Last 3 months
+    -   [x] **Active filter indicators** with visual tags showing applied filters
+    -   [x] One-click filter clearing for easy reset
 -   [x] Bulk operations support
 
 ### **📈 Analytics & Insights**
